@@ -27,13 +27,6 @@ export const metadata: Metadata = {
     title: "RetuRO Romania - Return & Recycle",
     description: "Return, Recycle, and get Rewarded for a sustainable future",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-  themeColor: "#10b981",
 };
 
 export default function RootLayout({
@@ -44,6 +37,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Viewport */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+        {/* Theme Color */}
+        <meta name="theme-color" content="#10b981" />
+
         {/* PWA Meta Tags */}
         <meta name="application-name" content="RetuRO Romania" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,12 +53,12 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/icons/browserconfig.xml" />
         <meta name="msapplication-TileColor" content="#10b981" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#10b981" />
 
-        {/* Apple Touch Icons */}
-        <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
+        {/* Apple Touch Icons - Critical for iOS PWA */}
+        <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
         <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
 
         {/* Icons */}
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
@@ -68,6 +67,9 @@ export default function RootLayout({
 
         {/* Apple Splash Screens */}
         <link rel="apple-touch-startup-image" href="/icons/icon-512x512.png" />
+
+        {/* Manifest */}
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${inter.className} min-h-screen bg-gray-50 overscroll-none`}>
         <div className="max-w-md mx-auto bg-white min-h-screen relative">
