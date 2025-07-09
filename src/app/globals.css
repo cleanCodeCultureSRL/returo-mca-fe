@@ -10,6 +10,34 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Custom Brand Colors */
+  --color-primary-green: #39ae70;
+  --color-primary-light-green: #d2ecde;
+
+  /* Emerald Colors */
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+
+  /* Green Colors */
+  --color-green-100: #dcfce7;
+  --color-green-400: #4ade80;
+
+  /* Gray Colors */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+
+  /* Base Colors */
+  --color-black: #000000;
+  --color-white: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
