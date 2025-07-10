@@ -34,6 +34,7 @@ export const colors = {
   // Base colors
   black: "#000000",
   white: "#ffffff",
+  yellow: "#FFDC04",
 
   // Semantic colors
   background: {
@@ -47,6 +48,7 @@ export const colors = {
     primary: "#000000",
     secondary: "#374151",
     muted: "#6b7280",
+    subtitle: "#8C9D95",
     inverse: "#ffffff",
     accent: "#39AE70",
   },
@@ -90,6 +92,7 @@ export const {
   gray,
   black,
   white,
+  yellow,
   background,
   text,
   border,

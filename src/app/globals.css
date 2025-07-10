@@ -52,3 +52,107 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Euclid Circular A Font */
+@font-face {
+  font-family: "Euclid Circular A";
+  src: url("/fonts/Euclid Circular A Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Euclid Circular A";
+  src: url("/fonts/Euclid Circular A Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Euclid Circular A";
+  src: url("/fonts/Euclid Circular A Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Euclid Circular A";
+  src: url("/fonts/Euclid Circular A Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Euclid Circular A";
+  src: url("/fonts/Euclid Circular A SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Euclid Circular A";
+  src: url("/fonts/Euclid Circular A Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Azo Sans Font */
+@font-face {
+  font-family: "Azo Sans";
+  src: url("/fonts/Azo_Sans_Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-euclid-regular {
+  font-family: "Euclid Circular A", Arial, sans-serif;
+  font-weight: 400;
+}
+
+.font-euclid-light {
+  font-family: "Euclid Circular A", Arial, sans-serif;
+  font-weight: 300;
+}
+
+.font-euclid-medium {
+  font-family: "Euclid Circular A", Arial, sans-serif;
+  font-weight: 500;
+}
+
+.font-euclid-semibold {
+  font-family: "Euclid Circular A", Arial, sans-serif;
+  font-weight: 600;
+}
+
+.font-euclid-bold {
+  font-family: "Euclid Circular A", Arial, sans-serif;
+  font-weight: 700;
+}
+
+.font-azo-bold {
+  font-family: "Azo Sans", Arial, sans-serif;
+  font-weight: 700;
+}
+
+/* Mapbox Popup Styling */
+.mapbox-popup .mapboxgl-popup-content {
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.mapbox-popup .mapboxgl-popup-tip {
+  border-top-color: white;
+}
+
+.mapbox-popup .mapboxgl-popup-close-button {
+  display: none;
+}

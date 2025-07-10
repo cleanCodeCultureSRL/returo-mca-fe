@@ -20,8 +20,8 @@ export default function OnboardingScreen1() {
       {/* Main Content Area */}
       <div className="flex-1 relative px-6 pt-16">
         {/* Top Bordered Card with Title and Illustration */}
-        <div className="absolute inset-x-6 top-16 bottom-0 flex flex-col">
-          <div className="bg-white rounded-4xl pt-8 px-8 border-4 border-black flex-1 flex flex-col z-10">
+        <div className="absolute inset-x-6 top-6 bottom-0 flex flex-col">
+          <div className="bg-gray-50 rounded-4xl pt-8 px-8 flex-1 flex flex-col z-10">
             {/* Title */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-primary-green">Pasul 1</h1>
@@ -43,7 +43,7 @@ export default function OnboardingScreen1() {
       </div>
 
       {/* Bottom Card */}
-      <div className="bg-primary-light-green rounded-t-4xl px-6 py-8 h-96 z-20">
+      <div className="bg-primary-light-green rounded-t-4xl px-6 py-8 h-102 z-20">
         {/* White Inner Card */}
         <div className="bg-white rounded-4xl p-8 mb-6 border-4 border-black min-h-[200px]">
           <div className="text-center">

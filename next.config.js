@@ -7,7 +7,16 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  webpack: (config) => {
+    // Handle mapbox-gl module
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "mapbox-gl": "mapbox-gl/dist/mapbox-gl.js",
+    };
+    return config;
+  },
+};
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 module.exports = withPWA(nextConfig);
