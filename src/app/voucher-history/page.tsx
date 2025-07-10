@@ -173,29 +173,43 @@ export default function VoucherHistoryPage() {
 
       {/* Voucher Modal */}
       {showModal && selectedVoucher && (
-        <div className="fixed bottom-0 left-0 right-0 flex items-end justify-center z-50">
-          <div className="bg-white rounded-t-4xl w-full mb-0 p-6 animate-slide-up shadow-2xl border-3 border-black">
+        <div
+          className="fixed top-0 left-0 right-0 bottom-0 flex items-end justify-center z-50"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="bg-white rounded-t-4xl w-full mb-0 p-6 animate-slide-up shadow-2xl border-3 border-black"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center space-x-2">
-                <Image
-                  src="/icons/receipt_icon.png"
-                  alt="Receipt"
-                  width={16}
-                  height={16}
-                  className="w-4 h-4"
-                />
-                <span className="text-lg font-bold text-black">{selectedVoucher.receiptNumber}</span>
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/icons/receipt_icon.png"
+                    alt="Receipt"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-lg font-bold text-black">{selectedVoucher.receiptNumber}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Image
+                    src="/icons/retailer_location_icon.png"
+                    alt="Receipt"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-lg font-bold text-black">{selectedVoucher.retailer}</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-1">
-                <Image
-                  src="/icons/retailer_location_icon.png"
-                  alt="Receipt"
-                  width={16}
-                  height={16}
-                  className="w-4 h-4"
-                />
-                <span className="text-lg font-bold text-black">{selectedVoucher.retailer}</span>
+
+              {/* Voucher Amount */}
+              <div className="text-center">
+                <div className="text-3xl font-bold text-black">{selectedVoucher.amount}</div>
+                <div className="text-sm text-gray-600 mt-1">Valoarea voucher-ului</div>
               </div>
             </div>
 
