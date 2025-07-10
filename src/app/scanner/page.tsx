@@ -12,12 +12,29 @@ export default function ScannerPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [cameraStarted, setCameraStarted] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
+  const [debugInfo, setDebugInfo] = useState<string>('');
 
   useEffect(() => {
     return () => {
       stopCamera();
     };
   }, []);
+
+  const runDiagnostics = () => {
+    const info = [];
+    info.push(`User Agent: ${navigator.userAgent}`);
+    info.push(`Platform: ${navigator.platform}`);
+    info.push(`Protocol: ${window.location.protocol}`);
+    info.push(`Host: ${window.location.host}`);
+    info.push(`MediaDevices: ${!!navigator.mediaDevices}`);
+    info.push(`getUserMedia: ${!!navigator.mediaDevices?.getUserMedia}`);
+    info.push(`Permissions API: ${!!navigator.permissions}`);
+    info.push(`Is PWA: ${window.matchMedia('(display-mode: standalone)').matches}`);
+    info.push(`Is iOS: ${/iPad|iPhone|iPod/.test(navigator.userAgent)}`);
+    info.push(`Is Safari: ${/^((?!chrome|android).)*safari/i.test(navigator.userAgent)}`);
+
+    setDebugInfo(info.join('\n'));
+  };
 
   const startCamera = async () => {
     try {
@@ -29,34 +46,98 @@ export default function ScannerPage() {
         throw new Error('Camera not supported in this browser');
       }
 
-      // iOS-friendly constraints
-      const constraints = {
-        video: {
-          facingMode: { ideal: 'environment' },
-          width: { ideal: 1280, max: 1920 },
-          height: { ideal: 720, max: 1080 }
+      // Try multiple constraint configurations for iOS compatibility
+      const constraintOptions = [
+        // First try with environment camera
+        {
+          video: {
+            facingMode: { exact: 'environment' },
+            width: { ideal: 640, max: 1280 },
+            height: { ideal: 480, max: 720 }
+          }
+        },
+        // Fallback to any camera
+        {
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 640, max: 1280 },
+            height: { ideal: 480, max: 720 }
+          }
+        },
+        // Minimal constraints for iOS
+        {
+          video: {
+            facingMode: 'environment'
+          }
+        },
+        // Last resort - any video
+        {
+          video: true
         }
-      };
+      ];
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      let stream = null;
+      let lastError = null;
+
+      // Try each constraint configuration
+      for (const constraints of constraintOptions) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia(constraints);
+          break; // Success, exit loop
+        } catch (err) {
+          lastError = err;
+          console.warn('Camera constraint failed:', constraints, err);
+        }
+      }
+
+      if (!stream) {
+        throw lastError || new Error('No camera available');
+      }
 
       if (videoRef.current) {
+        // Stop any existing stream
+        if (videoRef.current.srcObject) {
+          const existingStream = videoRef.current.srcObject as MediaStream;
+          existingStream.getTracks().forEach(track => track.stop());
+        }
+
         videoRef.current.srcObject = stream;
 
         // iOS-specific video setup
         videoRef.current.setAttribute('playsinline', 'true');
         videoRef.current.setAttribute('webkit-playsinline', 'true');
+        videoRef.current.setAttribute('autoplay', 'true');
         videoRef.current.muted = true;
+        videoRef.current.controls = false;
+
+        // Force play for iOS
+        const playVideo = async () => {
+          try {
+            await videoRef.current?.play();
+            setCameraStarted(true);
+          } catch (playError) {
+            console.error('Error playing video:', playError);
+            // Try to play again after a short delay
+            setTimeout(async () => {
+              try {
+                await videoRef.current?.play();
+                setCameraStarted(true);
+              } catch (retryError) {
+                console.error('Retry play failed:', retryError);
+                setError('Nu se poate porni camera. Încercați să reîncărcați pagina.');
+              }
+            }, 100);
+          }
+        };
 
         // Wait for video to load then play
-        videoRef.current.onloadedmetadata = () => {
-          videoRef.current?.play().then(() => {
-            setCameraStarted(true);
-          }).catch((playError) => {
-            console.error('Error playing video:', playError);
-            setError('Nu se poate porni camera. Încercați din nou.');
-          });
-        };
+        if (videoRef.current.readyState >= 2) {
+          // Video is already loaded
+          playVideo();
+        } else {
+          videoRef.current.onloadedmetadata = playVideo;
+          videoRef.current.oncanplay = playVideo;
+        }
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
@@ -65,13 +146,15 @@ export default function ScannerPage() {
       // More specific error messages
       if (err instanceof Error) {
         if (err.name === 'NotAllowedError') {
-          setError('Accesul la cameră a fost refuzat. Vă rugăm să acordați permisiunea pentru cameră din setările browserului.');
+          setError('Accesul la cameră a fost refuzat. Pentru iOS: Accesați Setări > Safari > Cameră și activați accesul. Apoi reîncărcați pagina.');
         } else if (err.name === 'NotFoundError') {
           setError('Nu s-a găsit o cameră disponibilă pe acest dispozitiv.');
         } else if (err.name === 'NotSupportedError') {
-          setError('Camera nu este suportată în acest browser.');
+          setError('Camera nu este suportată în acest browser. Încercați să deschideți în Safari.');
+        } else if (err.name === 'OverconstrainedError') {
+          setError('Cameră indisponibilă cu setările curente. Încercați din nou.');
         } else {
-          setError('Nu se poate accesa camera. Vă rugăm să încercați din nou.');
+          setError('Nu se poate accesa camera. Verificați că folosiți HTTPS și că browserul are permisiuni pentru cameră.');
         }
       } else {
         setError('Nu se poate accesa camera. Vă rugăm să încercați din nou.');
@@ -90,6 +173,7 @@ export default function ScannerPage() {
 
   const handleBack = () => {
     router.push('/home');
+
   };
 
   const handleCapture = () => {
@@ -133,6 +217,17 @@ export default function ScannerPage() {
             >
               Înapoi
             </button>
+            <button
+              onClick={runDiagnostics}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-euclid-regular hover:bg-blue-500 transition-colors"
+            >
+              Informații tehnice
+            </button>
+            {debugInfo && (
+              <div className="mt-4 p-3 bg-gray-800 rounded-lg text-left">
+                <pre className="text-xs whitespace-pre-wrap">{debugInfo}</pre>
+              </div>
+            )}
           </div>
         </div>
 
@@ -208,7 +303,10 @@ export default function ScannerPage() {
           playsInline
           muted
           webkit-playsinline="true"
+          controls={false}
+          disablePictureInPicture
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectFit: 'cover' }}
         />
 
         {/* Start Camera Button for iOS */}

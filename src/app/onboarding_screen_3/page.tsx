@@ -26,7 +26,7 @@ export default function OnboardingScreen3() {
           <div className="bg-gray-50 rounded-4xl pt-8 px-8 flex-1 flex flex-col z-10">
             {/* Title */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-primary-green">Pasul 3</h1>
+              <h1 className="text-3xl font-bold text-primary-green font-euclid-bold">Pasul 3</h1>
             </div>
 
             {/* Illustration */}
@@ -49,8 +49,8 @@ export default function OnboardingScreen3() {
         {/* White Inner Card */}
         <div className="bg-white rounded-4xl p-8 mb-6 border-4 border-black min-h-[200px]">
           <div className="text-center">
-            <h2 className="text-xl font-bold text-black mb-4 ">Folosește punctele câștigate</h2>
-            <p className="text-gray-700 text-base leading-relaxed">
+            <h2 className="text-xl font-bold text-black mb-4 font-euclid-bold">Folosește punctele câștigate</h2>
+            <p className="text-gray-700 text-base leading-relaxed font-euclid-regular">
               Transformă punctele acumulate în recompense și beneficii speciale la partenerii noștri
             </p>
           </div>
