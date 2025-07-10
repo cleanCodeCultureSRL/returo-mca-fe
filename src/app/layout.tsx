@@ -55,18 +55,18 @@ export default function RootLayout({
         <meta name="msapplication-tap-highlight" content="no" />
 
         {/* Apple Touch Icons - Critical for iOS PWA */}
-        <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png" />
-        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/returo_logo-180x180.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/returo_logo-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/returo_logo-180x180.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/returo_logo-192x192.png" />
 
         {/* Icons */}
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
-        <link rel="shortcut icon" href="/icons/icon-72x72.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/returo_logo-72x72.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/returo_logo-72x72.png" />
+        <link rel="shortcut icon" href="/icons/returo_logo-72x72.png" />
 
         {/* Apple Splash Screens */}
-        <link rel="apple-touch-startup-image" href="/icons/icon-512x512.png" />
+        <link rel="apple-touch-startup-image" href="/icons/returo_logo-512x512.png" />
 
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />

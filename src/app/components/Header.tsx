@@ -1,17 +1,37 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { yellow } from '../styles/colors';
 
 interface HeaderProps {
-  userName: string;
-  balance: string;
-  currency: string;
+  userName?: string;
+  balance?: string;
+  currency?: string;
+  showTitle?: boolean;
+  title?: string;
 }
 
-export default function Header({ userName, balance, currency }: HeaderProps) {
+export default function Header({ userName, balance, currency, showTitle, title }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const handleMenuItemClick = (label: string) => {
+    switch (label) {
+      case 'Portofel':
+        router.push('/wallet');
+        break;
+      case 'Logout':
+        router.push('/login');
+        break;
+      default:
+        // Handle other menu items as needed
+        console.log(`Clicked on ${label}`);
+        break;
+    }
+    setIsMenuOpen(false); // Close menu after navigation
+  };
 
   const menuItems = [
     { icon: '/icons/notificari_icon.png', label: 'Notificari', badge: '2', color: 'text-green-400' },
@@ -28,31 +48,36 @@ export default function Header({ userName, balance, currency }: HeaderProps) {
     <>
       <div className="p-4 pt-6">
         <div className="flex items-center justify-between">
-          {/* Profile Section - Floating Pill */}
-          <div className="flex items-center bg-black rounded-4xl h-[62px] flex-1  max-w-md mr-12">
-            <div className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center border-2 border-black">
-              <Image
-                src="/icons/barcode_scanner_icon.png"
-                alt="Barcode Scanner"
-                width={40}
-                height={40}
-              />
-            </div>
-            <div className="flex-1 px-4 py-3">
-              <p className="text-white text-sm font-euclid-regular">Soldul tău, <span className="font-euclid-bold">{userName}</span></p>
-              <div className="flex items-center">
+          {showTitle ? (
+            /* Page Title */
+            <h1 className="text-black text-2xl font-azo-bold ml-2">{title}</h1>
+          ) : (
+            /* Profile Section - Floating Pill */
+            <div className="flex items-center bg-black rounded-4xl h-[62px] flex-1  max-w-md mr-12">
+              <div className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center border-2 border-black">
                 <Image
-                  src="/icons/wallet_icon.png"
-                  alt="Wallet"
-                  width={18}
-                  height={18}
-                  className="w-[18px] h-[14px] mr-1"
+                  src="/icons/barcode_scanner_icon.png"
+                  alt="Barcode Scanner"
+                  width={40}
+                  height={40}
                 />
-                <span className="text-white text-lg font-euclid-bold">{balance}</span>
-                <span className="text-white text-sm ml-1 font-euclid-regular">{currency}</span>
+              </div>
+              <div className="flex-1 px-4 py-3">
+                <p className="text-white text-sm font-euclid-regular">Soldul tău, <span className="font-euclid-bold">{userName}</span></p>
+                <div className="flex items-center">
+                  <Image
+                    src="/icons/wallet_icon.png"
+                    alt="Wallet"
+                    width={18}
+                    height={18}
+                    className="w-[18px] h-[14px] mr-1"
+                  />
+                  <span className="text-white text-lg font-euclid-bold">{balance}</span>
+                  <span className="text-white text-sm ml-1 font-euclid-regular">{currency}</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Menu Button - Floating */}
           <button
@@ -86,7 +111,11 @@ export default function Header({ userName, balance, currency }: HeaderProps) {
           {/* Menu Items */}
           <div className="flex-1 px-6 py-8 space-y-6">
             {menuItems.map((item, index) => (
-              <div key={index} className="flex items-center space-x-4 cursor-pointer hover:bg-gray-800 p-3 rounded-lg transition-colors">
+              <div
+                key={index}
+                className="flex items-center space-x-4 cursor-pointer hover:bg-gray-800 p-3 rounded-lg transition-colors"
+                onClick={() => handleMenuItemClick(item.label)}
+              >
                 <div className="w-8 h-8 flex items-center justify-center">
                   {item.icon.startsWith('/icons/') ? (
                     <Image

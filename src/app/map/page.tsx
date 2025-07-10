@@ -234,13 +234,18 @@ export default function MapPage() {
   const currentLocationMarker = useRef<mapboxgl.Marker | null>(null);
 
   useEffect(() => {
-    if (map.current) return; // initialize map only once
+    // Clean up any existing map instance
+    if (map.current) {
+      map.current.remove();
+      map.current = null;
+    }
 
     // Set the access token
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiYW5kcmVpcGF0emEiLCJhIjoiY21jdDVtYTFsMDFkdjJ4cjMzMzNidmtibCJ9.DlZWQ2y7n4Od6j-jz-2cvw';
 
     if (!mapContainer.current) return;
 
+    // Initialize map
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/andreipatza/cmct5ptr3055701qw3owp89zl',
@@ -249,56 +254,56 @@ export default function MapPage() {
       attributionControl: false
     });
 
-    // Add markers for each location
-    locations.forEach((location) => {
-      if (!map.current) return;
-
-      // Create a DOM element for the marker using the PNG image
-      const el = document.createElement('div');
-      el.className = 'w-8 h-8 cursor-pointer transition-all hover:scale-110';
-
-      // Use different icons for different location types
-      const iconSrc = location.type === 'current' ? '/icons/current_location_icon.png' : '/icons/map_location_icon.png';
-      el.innerHTML = `<img src="${iconSrc}" alt="${location.name}" class="w-full h-full object-contain" />`;
-
-      // Create popup content
-      const popupContent = `
-        <div class="bg-white p-3 rounded-lg shadow-lg">
-          <h4 class="font-euclid-bold text-sm text-black">${location.name}</h4>
-          <p class="font-euclid-regular text-xs text-gray-600">${location.address}</p>
-        </div>
-      `;
-
-      // Create popup
-      const popup = new mapboxgl.Popup({
-        offset: 25,
-        closeButton: false,
-        className: 'mapbox-popup'
-      })
-        .setHTML(popupContent);
-
-      // Add click event to marker
-      el.addEventListener('click', () => {
-        setSelectedLocation(location);
-        setIsExpanded(false);
-        setDragProgress(0);
-      });
-
-      // Create marker
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat([location.longitude, location.latitude])
-        .setPopup(popup)
-        .addTo(map.current);
-
-      // Store reference to current location marker for updates
-      if (location.type === 'current') {
-        currentLocationMarker.current = marker;
-      }
-    });
-
-    // Fit map to show all locations
+    // Wait for map to load before adding markers
     map.current.on('load', () => {
       if (!map.current) return;
+
+      // Add markers for each location
+      locations.forEach((location) => {
+        if (!map.current) return;
+
+        // Create a DOM element for the marker using the PNG image
+        const el = document.createElement('div');
+        el.className = 'w-8 h-8 cursor-pointer transition-all hover:scale-110';
+
+        // Use different icons for different location types
+        const iconSrc = location.type === 'current' ? '/icons/current_location_icon.png' : '/icons/map_location_icon.png';
+        el.innerHTML = `<img src="${iconSrc}" alt="${location.name}" class="w-full h-full object-contain" />`;
+
+        // Create popup content
+        const popupContent = `
+          <div class="bg-white p-3 rounded-lg shadow-lg">
+            <h4 class="font-euclid-bold text-sm text-black">${location.name}</h4>
+            <p class="font-euclid-regular text-xs text-gray-600">${location.address}</p>
+          </div>
+        `;
+
+        // Create popup
+        const popup = new mapboxgl.Popup({
+          offset: 25,
+          closeButton: false,
+          className: 'mapbox-popup'
+        })
+          .setHTML(popupContent);
+
+        // Add click event to marker
+        el.addEventListener('click', () => {
+          setSelectedLocation(location);
+          setIsExpanded(false);
+          setDragProgress(0);
+        });
+
+        // Create marker
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat([location.longitude, location.latitude])
+          .setPopup(popup)
+          .addTo(map.current);
+
+        // Store reference to current location marker for updates
+        if (location.type === 'current') {
+          currentLocationMarker.current = marker;
+        }
+      });
 
       // Create bounds that include all locations
       const bounds = new mapboxgl.LngLatBounds();
@@ -313,11 +318,10 @@ export default function MapPage() {
       });
     });
 
-
-
     return () => {
       if (map.current) {
         map.current.remove();
+        map.current = null;
       }
     };
   }, []);
