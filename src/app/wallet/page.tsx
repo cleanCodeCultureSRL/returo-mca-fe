@@ -97,8 +97,8 @@ export default function WalletPage() {
             className="flex-1 bg-black rounded-4xl h-[62px] flex items-center hover:bg-gray-800 transition-colors"
           >
             <div className="flex-1 px-4 py-3">
-              <p className="text-l font-euclid-semibold" style={{ color: primary.green }}>Transferă</p>
-              <p className="text-white text-sm font-euclid-regular">sold</p>
+              <p className="text-l font-euclid-semibold text-left" style={{ color: primary.green }}>Transferă</p>
+              <p className="text-white text-sm font-euclid-regular text-left">sold</p>
             </div>
             <div className="w-[63px] h-[63px] bg-white rounded-full flex items-center justify-center border-5 border-white">
               <Image

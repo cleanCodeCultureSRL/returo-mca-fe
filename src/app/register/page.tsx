@@ -22,7 +22,7 @@ export default function RegisterPage() {
 
   return (
     <div className="fixed inset-0 bg-gray-50 flex flex-col">
-      <ThemeColor color="#ffffff" />
+      <ThemeColor color="#D2ECDE" />
       {/* Header Illustration */}
       <div className="bg-primary-light-green h-70 relative overflow-hidden z-10 w-screen left-1/2 transform -translate-x-1/2">
         <Image

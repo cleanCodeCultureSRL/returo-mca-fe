@@ -49,9 +49,9 @@ export default function OnboardingScreen3() {
         {/* White Inner Card */}
         <div className="bg-white rounded-4xl p-8 mb-6 border-4 border-black min-h-[200px]">
           <div className="text-center">
-            <h2 className="text-xl font-bold text-black mb-4 ">Folosește punctele lorem ipsum</h2>
+            <h2 className="text-xl font-bold text-black mb-4 ">Folosește punctele câștigate</h2>
             <p className="text-gray-700 text-base leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              Transformă punctele acumulate în recompense și beneficii speciale la partenerii noștri
             </p>
           </div>
         </div>

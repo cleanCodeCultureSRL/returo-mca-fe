@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import ThemeColor from '../components/ThemeColor';
 
 export default function ScannerPage() {
   const router = useRouter();
@@ -133,6 +134,7 @@ export default function ScannerPage() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
+      <ThemeColor color="black" />
       {/* Top Disclaimer */}
       <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/80 to-transparent">
         <div className="p-6 pt-12">

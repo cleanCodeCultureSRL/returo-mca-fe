@@ -49,9 +49,9 @@ export default function OnboardingScreen2() {
         {/* White Inner Card */}
         <div className="bg-white rounded-4xl p-8 mb-6 border-4 border-black min-h-[200px]">
           <div className="text-center">
-            <h2 className="text-xl font-bold text-black mb-4 ">Reciclează lorem ipsum</h2>
+            <h2 className="text-xl font-bold text-black mb-4 ">Reciclează și câștigă puncte</h2>
             <p className="text-gray-700 text-base leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              Scanează produsele tale reciclabile și primește puncte pentru fiecare contribuție la un mediu mai curat
             </p>
           </div>
         </div>
