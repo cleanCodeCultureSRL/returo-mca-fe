@@ -13,6 +13,8 @@ export default function ScannerPage() {
   const [cameraStarted, setCameraStarted] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
   const [debugInfo, setDebugInfo] = useState<string>('');
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     return () => {
@@ -231,8 +233,31 @@ export default function ScannerPage() {
   };
 
   const handleCapture = () => {
-    // TODO: Implement barcode scanning logic
-    console.log('Capture/Scan button pressed');
+    if (videoRef.current && canvasRef.current) {
+      try {
+        // Set canvas dimensions to match video
+        const canvas = canvasRef.current;
+        const video = videoRef.current;
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Draw current video frame to canvas
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          // Convert canvas to data URL
+          const captureDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+          setCapturedImage(captureDataUrl);
+
+          console.log('Image captured successfully');
+        }
+      } catch (error) {
+        console.error('Error capturing image:', error);
+      }
+    }
+
     setShowSuccessModal(true);
   };
 
@@ -247,6 +272,7 @@ export default function ScannerPage() {
 
   const handleScanAnother = () => {
     setShowSuccessModal(false);
+    setCapturedImage(null);
   };
 
   if (error) {
@@ -284,55 +310,6 @@ export default function ScannerPage() {
             )}
           </div>
         </div>
-
-        {/* Success Modal */}
-        {showSuccessModal && (
-          <div className="absolute inset-0 bg-black/50 flex items-end justify-center z-50">
-            <div className="bg-black text-white rounded-t-3xl w-full max-w-md p-6 space-y-6">
-              {/* Success Illustration */}
-              <div className="flex justify-center">
-                <div className="relative">
-                  <svg width="120" height="120" viewBox="0 0 120 120" className="text-green-500">
-                    <circle cx="60" cy="60" r="60" fill="currentColor" opacity="0.9" />
-                    <circle cx="60" cy="60" r="40" fill="currentColor" />
-                    <path d="M45 60l10 10 20-20" stroke="white" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  {/* Person illustration */}
-                  <div className="absolute -bottom-2 -right-2">
-                    <svg width="60" height="60" viewBox="0 0 60 60" className="text-white">
-                      <circle cx="30" cy="20" r="8" fill="currentColor" />
-                      <path d="M15 55 L45 55 L40 35 L20 35 Z" fill="currentColor" />
-                      <rect x="25" y="28" width="10" height="20" fill="currentColor" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {/* Success Message */}
-              <div className="text-center space-y-4">
-                <p className="text-lg font-euclid-regular leading-relaxed">
-                  Voucherul a fost adăugat în arhiva lorem ipsum sit dolor, sit amet, consectetur
-                </p>
-
-                {/* View Archive Button */}
-                <button
-                  onClick={handleViewArchive}
-                  className="text-white text-lg font-euclid-semibold underline hover:opacity-80 transition-opacity"
-                >
-                  Vezi arhiva
-                </button>
-              </div>
-
-              {/* Scan Another Button */}
-              <button
-                onClick={handleScanAnother}
-                className="w-full bg-white text-black py-4 rounded-full text-lg font-euclid-bold hover:bg-gray-100 transition-colors"
-              >
-                Scanează alt voucher
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
@@ -351,25 +328,46 @@ export default function ScannerPage() {
 
       {/* Camera View */}
       <div className="relative w-full h-full min-h-screen">
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          webkit-playsinline="true"
-          controls={false}
-          disablePictureInPicture
-          className="absolute inset-0 w-full h-full object-cover z-10"
-          style={{
-            objectFit: 'cover',
-            width: '100%',
-            height: '100%',
-            minHeight: '100vh',
-            background: 'transparent',
-            transform: 'translateZ(0)',
-            WebkitTransform: 'translateZ(0)'
-          }}
+        {/* Hidden canvas for capturing */}
+        <canvas
+          ref={canvasRef}
+          className="hidden"
         />
+
+        {/* Show captured image if available, otherwise show video */}
+        {capturedImage ? (
+          <img
+            src={capturedImage}
+            alt="Captured"
+            className="absolute inset-0 w-full h-full object-cover z-10"
+            style={{
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              minHeight: '100vh',
+            }}
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            webkit-playsinline="true"
+            controls={false}
+            disablePictureInPicture
+            className="absolute inset-0 w-full h-full object-cover z-10"
+            style={{
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              minHeight: '100vh',
+              background: 'transparent',
+              transform: 'translateZ(0)',
+              WebkitTransform: 'translateZ(0)'
+            }}
+          />
+        )}
 
         {/* Start Camera Button for iOS */}
         {showStartButton && (
@@ -388,11 +386,11 @@ export default function ScannerPage() {
           </div>
         )}
 
-        {/* Dark overlay around scanning area - only show when camera is started */}
-        {cameraStarted && <div className="absolute inset-0 bg-black/30 z-20"></div>}
+        {/* Dark overlay around scanning area - only show when camera is started and no image captured */}
+        {cameraStarted && !capturedImage && <div className="absolute inset-0 bg-black/30 z-20"></div>}
 
-        {/* Barcode Scanning Rectangle - only show when camera is started */}
-        {cameraStarted && (
+        {/* Barcode Scanning Rectangle - only show when camera is started and no image captured */}
+        {cameraStarted && !capturedImage && (
           <div className="absolute inset-0 flex items-center justify-center z-30">
             <div className="relative">
               {/* Yellow Rectangle Border */}
@@ -418,45 +416,96 @@ export default function ScannerPage() {
         )}
 
         {/* Video status indicator for debugging */}
-        {cameraStarted && (
+        {cameraStarted && !capturedImage && (
           <div className="absolute top-4 right-4 z-40 bg-green-500 text-white px-2 py-1 rounded text-xs">
             Camera ON
           </div>
         )}
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="absolute bottom-8 left-0 right-0 flex items-center justify-between px-6 z-30">
-        {/* Back Button */}
-        <button
-          onClick={handleBack}
-          className="w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-            <path d="m15 18-6-6 6-6" />
-          </svg>
-        </button>
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="absolute inset-0 bg-black/50 flex items-end justify-center z-50">
+          <div className="bg-black text-white rounded-t-3xl w-full max-w-md p-6 space-y-6">
+            {/* Success Illustration */}
+            <div className="flex justify-center">
+              <div className="relative">
+                <svg width="120" height="120" viewBox="0 0 120 120" className="text-green-500">
+                  <circle cx="60" cy="60" r="60" fill="currentColor" opacity="0.9" />
+                  <circle cx="60" cy="60" r="40" fill="currentColor" />
+                  <path d="M45 60l10 10 20-20" stroke="white" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {/* Person illustration */}
+                <div className="absolute -bottom-2 -right-2">
+                  <svg width="60" height="60" viewBox="0 0 60 60" className="text-white">
+                    <circle cx="30" cy="20" r="8" fill="currentColor" />
+                    <path d="M15 55 L45 55 L40 35 L20 35 Z" fill="currentColor" />
+                    <rect x="25" y="28" width="10" height="20" fill="currentColor" />
+                  </svg>
+                </div>
+              </div>
+            </div>
 
-        {/* Scan/Capture Button */}
-        <button
-          onClick={handleCapture}
-          className="w-20 h-20 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg border-4 border-white"
-        >
-          <div className="w-16 h-16 bg-transparent border-2 border-black rounded-full"></div>
-        </button>
+            {/* Success Message */}
+            <div className="text-center space-y-4">
+              <p className="text-lg font-euclid-regular leading-relaxed">
+                Voucherul a fost adăugat în arhiva lorem ipsum sit dolor, sit amet, consectetur
+              </p>
 
-        {/* Gallery Button */}
-        <button
-          onClick={handleGallery}
-          className="w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-            <circle cx="9" cy="9" r="2" />
-            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-          </svg>
-        </button>
-      </div>
+              {/* View Archive Button */}
+              <button
+                onClick={handleViewArchive}
+                className="text-white text-lg font-euclid-semibold underline hover:opacity-80 transition-opacity"
+              >
+                Vezi arhiva
+              </button>
+            </div>
+
+            {/* Scan Another Button */}
+            <button
+              onClick={handleScanAnother}
+              className="w-full bg-white text-black py-4 rounded-full text-lg font-euclid-bold hover:bg-gray-100 transition-colors"
+            >
+              Scanează alt voucher
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Navigation - hide when modal is shown */}
+      {!showSuccessModal && (
+        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-between px-6 z-30">
+          {/* Back Button */}
+          <button
+            onClick={handleBack}
+            className="w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+
+          {/* Scan/Capture Button */}
+          <button
+            onClick={handleCapture}
+            className="w-20 h-20 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg border-4 border-white"
+          >
+            <div className="w-16 h-16 bg-transparent border-2 border-black rounded-full"></div>
+          </button>
+
+          {/* Gallery Button */}
+          <button
+            onClick={handleGallery}
+            className="w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="9" cy="9" r="2" />
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 } 

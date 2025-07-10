@@ -23,7 +23,7 @@ export default function OnboardingScreen3() {
       <div className="flex-1 relative px-6 pt-16">
         {/* Top Bordered Card with Title and Illustration */}
         <div className="absolute inset-x-6 top-6 bottom-0 flex flex-col">
-          <div className="bg-gray-50 rounded-4xl pt-8 px-8 flex-1 flex flex-col z-10">
+          <div className="bg-white-50 rounded-4xl pt-8 px-8 flex-1 flex flex-col z-10">
             {/* Title */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-primary-green font-euclid-bold">Pasul 3</h1>
