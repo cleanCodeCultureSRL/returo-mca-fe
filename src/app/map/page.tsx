@@ -517,7 +517,7 @@ export default function MapPage() {
 
   return (
     <div className="min-h-screen relative">
-      <ThemeColor color="#39AE70" />
+      <ThemeColor color="#253045" />
       {/* Full Screen Map */}
       <div className="absolute inset-0">
         <div ref={mapContainer} className="w-full h-full" />
