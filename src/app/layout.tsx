@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "RetuRO",
   },
   formatDetection: {
@@ -41,17 +41,17 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
         {/* Theme Color */}
-        <meta name="theme-color" content="#10b981" />
+        <meta name="theme-color" content="#39AE70" />
 
         {/* PWA Meta Tags */}
         <meta name="application-name" content="RetuRO Romania" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="RetuRO" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/icons/browserconfig.xml" />
-        <meta name="msapplication-TileColor" content="#10b981" />
+        <meta name="msapplication-TileColor" content="#39AE70" />
         <meta name="msapplication-tap-highlight" content="no" />
 
         {/* Apple Touch Icons - Critical for iOS PWA */}

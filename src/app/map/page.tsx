@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import mapboxgl from 'mapbox-gl';
+import { useRouter } from 'next/navigation';
 import { primary } from '../styles/colors';
 import Header from '../components/Header';
 
@@ -219,6 +220,7 @@ const locations: Location[] = [
 ];
 
 export default function MapPage() {
+  const router = useRouter();
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -522,7 +524,7 @@ export default function MapPage() {
 
       {/* Center Position Button */}
       <div
-        className="absolute right-4 z-20 transition-all duration-300 ease-out"
+        className="absolute right-4 z-10 transition-all duration-300 ease-out"
         style={{
           bottom: isExpanded
             ? `calc(60vh + 20px)`
@@ -725,9 +727,15 @@ export default function MapPage() {
       </div>
 
       {/* Permanent Action Buttons at Bottom - Always visible */}
-      <div className="absolute bottom-8 left-0 right-0 flex items-center justify-between px-6 z-30">
+      <div className="absolute bottom-8 left-0 right-0 flex items-center justify-between px-6 z-10">
         <button
-          onClick={() => setSelectedLocation(null)}
+          onClick={() => {
+            if (selectedLocation) {
+              setSelectedLocation(null);
+            } else {
+              router.push('/home');
+            }
+          }}
           className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">

@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   const handleLogin = () => {
     // Navigate to main app
-    router.push('/');
+    router.push('/home');
   };
 
   const handleForgotPassword = () => {
