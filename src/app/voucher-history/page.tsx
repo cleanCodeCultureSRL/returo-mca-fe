@@ -174,20 +174,22 @@ export default function VoucherHistoryPage() {
       {/* Voucher Modal */}
       {showModal && selectedVoucher && (
         <div className="fixed bottom-0 left-0 right-0 flex items-end justify-center z-50">
-          <div className="bg-white rounded-t-4xl w-full max-w-md mx-4 mb-0 p-6 animate-slide-up shadow-2xl border-3 border-black">
+          <div className="bg-white rounded-t-4xl w-full mb-0 p-6 animate-slide-up shadow-2xl border-3 border-black">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-green-500 rounded flex items-center justify-center">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                    <path d="M9 12l2 2 4-4" />
-                  </svg>
-                </div>
+                <Image
+                  src="/icons/receipt_icon.png"
+                  alt="Receipt"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4"
+                />
                 <span className="text-lg font-bold text-black">{selectedVoucher.receiptNumber}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <Image
-                  src="/icons/receipt_icon.png"
+                  src="/icons/retailer_location_icon.png"
                   alt="Receipt"
                   width={16}
                   height={16}
@@ -201,17 +203,14 @@ export default function VoucherHistoryPage() {
             <div className="flex flex-col items-center mb-8">
               <div className="bg-white p-4 rounded-lg">
                 {/* Barcode lines */}
-                <div className="flex items-end justify-center space-x-0.5 mb-2">
-                  {Array.from({ length: 95 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="bg-black"
-                      style={{
-                        width: Math.random() > 0.5 ? '2px' : '1px',
-                        height: Math.random() > 0.3 ? '60px' : '45px',
-                      }}
-                    />
-                  ))}
+                <div className="flex justify-center mb-2">
+                  <Image
+                    src="/barcode.png"
+                    alt="Barcode"
+                    width={200}
+                    height={60}
+                    className="object-contain"
+                  />
                 </div>
                 <div className="text-center text-lg font-bold text-black tracking-wider">
                   896312450834
@@ -223,7 +222,7 @@ export default function VoucherHistoryPage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={handleCloseModal}
-                className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+                className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="m15 18-6-6 6-6" />
