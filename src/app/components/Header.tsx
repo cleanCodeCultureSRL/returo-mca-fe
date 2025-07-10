@@ -19,6 +19,9 @@ export default function Header({ userName, balance, currency, showTitle, title }
 
   const handleMenuItemClick = (label: string) => {
     switch (label) {
+      case 'Notificari':
+        router.push('/notifications');
+        break;
       case 'Portofel':
         router.push('/wallet');
         break;

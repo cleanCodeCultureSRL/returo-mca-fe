@@ -19,7 +19,7 @@ export default function HomePage() {
     <div className="min-h-screen" style={{ backgroundColor: primary.lightGreen }}>
       <ThemeColor color="#D2ECDE" />
       {/* Header */}
-      <Header userName="Andrei" balance="1.832,05" currency="Ron" />
+      <Header userName="Andrei" balance="1.832" currency="Ron" />
 
       {/* Main Content */}
       <div className="px-4 pb-4 space-y-6 mt-4">
@@ -134,7 +134,10 @@ export default function HomePage() {
 
       {/* Scan Button - Always visible at bottom center */}
       <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-        <button className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg">
+        <button
+          onClick={() => router.push('/scanner')}
+          className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg"
+        >
           <Image
             src="/icons/open_camera_icon.png"
             alt="Scan"

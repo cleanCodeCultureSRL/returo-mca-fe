@@ -18,6 +18,10 @@ export default function WalletPage() {
     router.push('/voucher-history');
   };
 
+  const handleTransfer = () => {
+    router.push('/transfer');
+  };
+
   const transactions = [
     { retailer: 'Kaufland', receiptNumber: '00044728', amount: '47,5 RON', time: '17/02/2025 13:47' },
     { retailer: 'Carrefour', receiptNumber: '00098432', amount: '23,5 RON', time: '19/02/2025 10:32' },
@@ -52,7 +56,7 @@ export default function WalletPage() {
             <h2 className="text-white text-lg font-euclid-semibold mb-2">Soldul tău total</h2>
 
             <div className="text-black text-4xl font-azo-bold">
-              1.832,05 <span className="text-xl font-azo-regular">Ron</span>
+              1.832 <span className="text-xl font-azo-regular">Ron</span>
             </div>
 
             <p className="text-black text-sm font-euclid-semibold">Mai puțin CO₂</p>
@@ -88,7 +92,10 @@ export default function WalletPage() {
         {/* Action Buttons */}
         <div className="flex space-x-4">
           {/* Transfer Button */}
-          <div className="flex-1 bg-black rounded-4xl h-[62px] flex items-center">
+          <button
+            onClick={handleTransfer}
+            className="flex-1 bg-black rounded-4xl h-[62px] flex items-center hover:bg-gray-800 transition-colors"
+          >
             <div className="flex-1 px-4 py-3">
               <p className="text-l font-euclid-semibold" style={{ color: primary.green }}>Transferă</p>
               <p className="text-white text-sm font-euclid-regular">sold</p>
@@ -102,7 +109,7 @@ export default function WalletPage() {
                 className="w-6 h-6"
               />
             </div>
-          </div>
+          </button>
 
           {/* Donate Button */}
           <div className="flex-1 bg-black rounded-4xl h-[62px] flex items-center">
@@ -164,7 +171,10 @@ export default function WalletPage() {
         </button>
 
         {/* Scan Button */}
-        <button className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg">
+        <button
+          onClick={() => router.push('/scanner')}
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+        >
           <Image
             src="/icons/open_camera_icon.png"
             alt="Scan"

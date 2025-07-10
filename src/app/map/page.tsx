@@ -525,7 +525,7 @@ export default function MapPage() {
 
       {/* Header - Absolutely positioned over the map */}
       <div className="absolute top-0 left-0 right-0 z-10">
-        <Header userName="Andrei" balance="1.832,05" currency="Ron" />
+        <Header userName="Andrei" balance="1.832" currency="Ron" />
       </div>
 
       {/* Center Position Button */}
@@ -749,7 +749,10 @@ export default function MapPage() {
           </svg>
         </button>
 
-        <button className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg">
+        <button
+          onClick={() => router.push('/scanner')}
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+        >
           <Image
             src="/icons/open_camera_icon.png"
             alt="Scan"

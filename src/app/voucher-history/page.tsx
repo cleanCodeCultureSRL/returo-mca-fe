@@ -13,12 +13,14 @@ interface Voucher {
   date: string;
   amount: string;
   retailer: string;
+  status: 'disponibile' | 'utilizate' | 'expirate';
 }
 
 export default function VoucherHistoryPage() {
   const router = useRouter();
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<'disponibile' | 'utilizate' | 'expirate'>('disponibile');
 
   const handleBack = () => {
     router.push('/home');
@@ -45,63 +47,79 @@ export default function VoucherHistoryPage() {
       receiptNumber: '00044728',
       date: '17/06/2025 13:47:02',
       amount: '47,5 RON',
-      retailer: 'Kaufland'
+      retailer: 'Kaufland',
+      status: 'disponibile' as const
     },
     {
       receiptNumber: '00098432',
       date: '16/06/2025 10:32:15',
       amount: '23,5 RON',
-      retailer: 'Carrefour'
+      retailer: 'Carrefour',
+      status: 'disponibile' as const
     },
     {
       receiptNumber: '00156789',
       date: '15/06/2025 16:18:43',
       amount: '156,5 RON',
-      retailer: 'Auchan'
+      retailer: 'Auchan',
+      status: 'utilizate' as const
     },
     {
       receiptNumber: '00067291',
       date: '14/06/2025 09:15:28',
       amount: '31 RON',
-      retailer: 'Mega Image'
+      retailer: 'Mega Image',
+      status: 'expirate' as const
     },
     {
       receiptNumber: '00034567',
       date: '13/06/2025 14:22:10',
       amount: '18,5 RON',
-      retailer: 'Profi'
+      retailer: 'Profi',
+      status: 'disponibile' as const
     },
     {
-      receiptNumber: '00044728',
+      receiptNumber: '00044729',
       date: '17/06/2025 13:47:02',
       amount: '47,5 RON',
-      retailer: 'Kaufland'
+      retailer: 'Kaufland',
+      status: 'utilizate' as const
     },
     {
-      receiptNumber: '00098432',
+      receiptNumber: '00098433',
       date: '16/06/2025 10:32:15',
       amount: '23,5 RON',
-      retailer: 'Carrefour'
+      retailer: 'Carrefour',
+      status: 'expirate' as const
     },
     {
-      receiptNumber: '00156789',
+      receiptNumber: '00156790',
       date: '15/06/2025 16:18:43',
       amount: '156,5 RON',
-      retailer: 'Auchan'
+      retailer: 'Auchan',
+      status: 'disponibile' as const
     },
     {
-      receiptNumber: '00067291',
+      receiptNumber: '00067292',
       date: '14/06/2025 09:15:28',
       amount: '31 RON',
-      retailer: 'Mega Image'
+      retailer: 'Mega Image',
+      status: 'utilizate' as const
     },
     {
-      receiptNumber: '00034567',
+      receiptNumber: '00034568',
       date: '13/06/2025 14:22:10',
       amount: '18,5 RON',
-      retailer: 'Profi'
+      retailer: 'Profi',
+      status: 'expirate' as const
     },
   ];
+
+  const filteredVouchers = vouchers.filter(voucher => voucher.status === selectedFilter);
+
+  const handleFilterChange = (filter: 'disponibile' | 'utilizate' | 'expirate') => {
+    setSelectedFilter(filter);
+  };
 
   return (
     <div className="h-screen flex flex-col relative" style={{ backgroundColor: primary.lightGreen }}>
@@ -115,15 +133,27 @@ export default function VoucherHistoryPage() {
       {/* Fixed Filter Tabs */}
       <div className="fixed top-22 left-0 right-0 z-30 flex space-x-2 pt-4 px-4 pb-4" style={{ backgroundColor: primary.lightGreen }}>
         <button
-          className="text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1"
-          style={{ backgroundColor: primary.green }}
+          onClick={() => handleFilterChange('disponibile')}
+          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1 ${selectedFilter === 'disponibile' ? '' : 'bg-white'
+            }`}
+          style={{ backgroundColor: selectedFilter === 'disponibile' ? primary.green : undefined }}
         >
           Disponibile
         </button>
-        <button className="bg-white text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1">
+        <button
+          onClick={() => handleFilterChange('utilizate')}
+          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1 ${selectedFilter === 'utilizate' ? '' : 'bg-white'
+            }`}
+          style={{ backgroundColor: selectedFilter === 'utilizate' ? primary.green : undefined }}
+        >
           Utilizate
         </button>
-        <button className="bg-white text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1">
+        <button
+          onClick={() => handleFilterChange('expirate')}
+          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1 ${selectedFilter === 'expirate' ? '' : 'bg-white'
+            }`}
+          style={{ backgroundColor: selectedFilter === 'expirate' ? primary.green : undefined }}
+        >
           Expirate
         </button>
       </div>
@@ -131,13 +161,14 @@ export default function VoucherHistoryPage() {
       {/* Scrollable Voucher History */}
       <div className="flex-1 overflow-y-auto px-4 pb-24 pt-44">
         <div className="space-y-4">
-          {vouchers.map((voucher, index) => (
+          {filteredVouchers.map((voucher, index) => (
             <div key={index} onClick={() => handleVoucherSelect(voucher)} className="cursor-pointer">
               <ReceiptCard
                 receiptNumber={voucher.receiptNumber}
                 date={voucher.date}
                 amount={voucher.amount}
                 retailer={voucher.retailer}
+                status={voucher.status}
               />
             </div>
           ))}
@@ -157,7 +188,10 @@ export default function VoucherHistoryPage() {
         </button>
 
         {/* Scan Button */}
-        <button className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg">
+        <button
+          onClick={() => router.push('/scanner')}
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+        >
           <Image
             src="/icons/open_camera_icon.png"
             alt="Scan"
