@@ -89,18 +89,21 @@ export default function HomePage() {
               date="17/06/2025 13:47"
               amount="9 RON"
               retailer="Kaufland"
+              status="disponibile"
             />
             <ReceiptCard
               receiptNumber="00042228"
               date="19/06/2025 19:33"
               amount="26 RON"
               retailer="Carrefour"
+              status="disponibile"
             />
             <ReceiptCard
               receiptNumber="01044722"
               date="17/06/2025 10:21"
               amount="14 RON"
               retailer="Auchan"
+              status="utilizate"
             />
 
             {/* Archive Button */}
