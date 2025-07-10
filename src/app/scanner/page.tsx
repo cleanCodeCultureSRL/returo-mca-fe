@@ -10,9 +10,10 @@ export default function ScannerPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [cameraStarted, setCameraStarted] = useState(false);
+  const [showStartButton, setShowStartButton] = useState(true);
 
   useEffect(() => {
-    startCamera();
     return () => {
       stopCamera();
     };
@@ -20,20 +21,61 @@ export default function ScannerPage() {
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      setError(null);
+      setShowStartButton(false);
+
+      // Check if browser supports getUserMedia
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera not supported in this browser');
+      }
+
+      // iOS-friendly constraints
+      const constraints = {
         video: {
-          facingMode: 'environment', // Use back camera
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280, max: 1920 },
+          height: { ideal: 720, max: 1080 }
         }
-      });
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+
+        // iOS-specific video setup
+        videoRef.current.setAttribute('playsinline', 'true');
+        videoRef.current.setAttribute('webkit-playsinline', 'true');
+        videoRef.current.muted = true;
+
+        // Wait for video to load then play
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current?.play().then(() => {
+            setCameraStarted(true);
+          }).catch((playError) => {
+            console.error('Error playing video:', playError);
+            setError('Nu se poate porni camera. Încercați din nou.');
+          });
+        };
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
-      setError('Nu se poate accesa camera. Vă rugăm să acordați permisiunea pentru cameră.');
+      setShowStartButton(true);
+
+      // More specific error messages
+      if (err instanceof Error) {
+        if (err.name === 'NotAllowedError') {
+          setError('Accesul la cameră a fost refuzat. Vă rugăm să acordați permisiunea pentru cameră din setările browserului.');
+        } else if (err.name === 'NotFoundError') {
+          setError('Nu s-a găsit o cameră disponibilă pe acest dispozitiv.');
+        } else if (err.name === 'NotSupportedError') {
+          setError('Camera nu este suportată în acest browser.');
+        } else {
+          setError('Nu se poate accesa camera. Vă rugăm să încercați din nou.');
+        }
+      } else {
+        setError('Nu se poate accesa camera. Vă rugăm să încercați din nou.');
+      }
     }
   };
 
@@ -41,7 +83,9 @@ export default function ScannerPage() {
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
       stream.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject = null;
     }
+    setCameraStarted(false);
   };
 
   const handleBack = () => {
@@ -70,14 +114,26 @@ export default function ScannerPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
+        <ThemeColor color="black" />
         <div className="text-white text-center p-4">
-          <p className="mb-4">{error}</p>
-          <button
-            onClick={() => router.push('/home')}
-            className="bg-white text-black px-4 py-2 rounded-lg"
-          >
-            Înapoi
-          </button>
+          <p className="mb-6">{error}</p>
+          <div className="space-y-4">
+            <button
+              onClick={() => {
+                setError(null);
+                setShowStartButton(true);
+              }}
+              className="bg-white text-black px-6 py-3 rounded-full text-lg font-euclid-bold hover:bg-gray-100 transition-colors mr-4"
+            >
+              Încercați din nou
+            </button>
+            <button
+              onClick={() => router.push('/home')}
+              className="bg-gray-600 text-white px-6 py-3 rounded-full text-lg font-euclid-bold hover:bg-gray-500 transition-colors"
+            >
+              Înapoi
+            </button>
+          </div>
         </div>
 
         {/* Success Modal */}
@@ -151,35 +207,55 @@ export default function ScannerPage() {
           autoPlay
           playsInline
           muted
+          webkit-playsinline="true"
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        {/* Barcode Scanning Rectangle */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative">
-            {/* Yellow Rectangle Border */}
-            <div className="w-80 h-48 border-4 border-yellow-400 rounded-lg relative">
-              {/* Corner indicators */}
-              <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-yellow-400 rounded-tl-lg"></div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-yellow-400 rounded-tr-lg"></div>
-              <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-4 border-l-4 border-yellow-400 rounded-bl-lg"></div>
-              <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-yellow-400 rounded-br-lg"></div>
-
-              {/* Scanning line animation */}
-              <div className="absolute inset-0 overflow-hidden rounded-lg">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-400 animate-pulse"></div>
-              </div>
+        {/* Start Camera Button for iOS */}
+        {showStartButton && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-40">
+            <div className="text-center">
+              <button
+                onClick={startCamera}
+                className="bg-white text-black px-8 py-4 rounded-full text-lg font-euclid-bold hover:bg-gray-100 transition-colors mb-4"
+              >
+                Pornește camera
+              </button>
+              <p className="text-white text-sm font-euclid-regular">
+                Apasă pentru a accesa camera
+              </p>
             </div>
-
-            {/* Instruction text */}
-            <p className="text-white text-center mt-4 font-euclid-regular">
-              Poziționează codul de bare în dreptunghi
-            </p>
           </div>
-        </div>
+        )}
 
-        {/* Dark overlay around scanning area */}
-        <div className="absolute inset-0 bg-black/30"></div>
+        {/* Barcode Scanning Rectangle - only show when camera is started */}
+        {cameraStarted && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative">
+              {/* Yellow Rectangle Border */}
+              <div className="w-80 h-48 border-4 border-yellow-400 rounded-lg relative">
+                {/* Corner indicators */}
+                <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-yellow-400 rounded-tl-lg"></div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-yellow-400 rounded-tr-lg"></div>
+                <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-4 border-l-4 border-yellow-400 rounded-bl-lg"></div>
+                <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-yellow-400 rounded-br-lg"></div>
+
+                {/* Scanning line animation */}
+                <div className="absolute inset-0 overflow-hidden rounded-lg">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-400 animate-pulse"></div>
+                </div>
+              </div>
+
+              {/* Instruction text */}
+              <p className="text-white text-center mt-4 font-euclid-regular">
+                Poziționează codul de bare în dreptunghi
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Dark overlay around scanning area - only show when camera is started */}
+        {cameraStarted && <div className="absolute inset-0 bg-black/30"></div>}
       </div>
 
       {/* Bottom Navigation */}
