@@ -6,6 +6,7 @@ import { primary, yellow, text } from '../styles/colors';
 import ReceiptCard from '../components/ReceiptCard';
 import MapboxMap from '../components/MapboxMap';
 import Header from '../components/Header';
+import ThemeColor from '../components/ThemeColor';
 
 export default function HomePage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: primary.lightGreen }}>
+      <ThemeColor color="#D2ECDE" />
       {/* Header */}
       <Header userName="Andrei" balance="1.832,05" currency="Ron" />
 

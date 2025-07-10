@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import ThemeColor from '../components/ThemeColor';
 
 export default function OnboardingScreen3() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function OnboardingScreen3() {
   };
   return (
     <div className="fixed inset-0 bg-gray-50 flex flex-col">
+      <ThemeColor color="#ffffff" />
 
       {/* Main Content Area */}
       <div className="flex-1 relative px-6 pt-16">

@@ -6,6 +6,7 @@ import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/navigation';
 import { primary } from '../styles/colors';
 import Header from '../components/Header';
+import ThemeColor from '../components/ThemeColor';
 
 interface Location {
   id: string;
@@ -512,6 +513,7 @@ export default function MapPage() {
 
   return (
     <div className="min-h-screen relative">
+      <ThemeColor color="#39AE70" />
       {/* Full Screen Map */}
       <div className="absolute inset-0">
         <div ref={mapContainer} className="w-full h-full" />

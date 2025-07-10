@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import ThemeColor from './components/ThemeColor';
 
 export default function Home() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function Home() {
 
   return (
     <div className="fixed inset-0 bg-primary-green flex flex-col items-center justify-center z-50 overflow-hidden">
+      <ThemeColor color="#39AE70" />
       <div className="absolute inset-0 flex items-start justify-center pt-70">
         <div className="animate-fade-in">
           <Image
