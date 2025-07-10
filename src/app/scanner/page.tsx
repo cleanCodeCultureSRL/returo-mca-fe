@@ -33,6 +33,33 @@ export default function ScannerPage() {
     info.push(`Is iOS: ${/iPad|iPhone|iPod/.test(navigator.userAgent)}`);
     info.push(`Is Safari: ${/^((?!chrome|android).)*safari/i.test(navigator.userAgent)}`);
 
+    // Video element diagnostics
+    if (videoRef.current) {
+      info.push(`Video Element: Found`);
+      info.push(`Video Ready State: ${videoRef.current.readyState}`);
+      info.push(`Video Paused: ${videoRef.current.paused}`);
+      info.push(`Video Muted: ${videoRef.current.muted}`);
+      info.push(`Video Width: ${videoRef.current.videoWidth}`);
+      info.push(`Video Height: ${videoRef.current.videoHeight}`);
+      info.push(`Video Current Time: ${videoRef.current.currentTime}`);
+      info.push(`Video Duration: ${videoRef.current.duration}`);
+      info.push(`Video Src Object: ${!!videoRef.current.srcObject}`);
+      info.push(`Video Display: ${window.getComputedStyle(videoRef.current).display}`);
+      info.push(`Video Visibility: ${window.getComputedStyle(videoRef.current).visibility}`);
+      info.push(`Video Opacity: ${window.getComputedStyle(videoRef.current).opacity}`);
+
+      if (videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        info.push(`Stream Active: ${stream.active}`);
+        info.push(`Stream Tracks: ${stream.getTracks().length}`);
+        stream.getTracks().forEach((track, index) => {
+          info.push(`Track ${index}: ${track.kind} - ${track.readyState} - ${track.enabled}`);
+        });
+      }
+    } else {
+      info.push(`Video Element: Not Found`);
+    }
+
     setDebugInfo(info.join('\n'));
   };
 
@@ -113,20 +140,37 @@ export default function ScannerPage() {
         // Force play for iOS
         const playVideo = async () => {
           try {
-            await videoRef.current?.play();
-            setCameraStarted(true);
+            if (videoRef.current) {
+              // Force video to be visible first
+              videoRef.current.style.display = 'block';
+              videoRef.current.style.visibility = 'visible';
+              videoRef.current.style.opacity = '1';
+
+              await videoRef.current.play();
+              setCameraStarted(true);
+
+              // Log success for debugging
+              console.log('Video playing successfully, dimensions:', {
+                videoWidth: videoRef.current.videoWidth,
+                videoHeight: videoRef.current.videoHeight,
+                readyState: videoRef.current.readyState
+              });
+            }
           } catch (playError) {
             console.error('Error playing video:', playError);
             // Try to play again after a short delay
             setTimeout(async () => {
               try {
-                await videoRef.current?.play();
-                setCameraStarted(true);
+                if (videoRef.current) {
+                  await videoRef.current.play();
+                  setCameraStarted(true);
+                  console.log('Video playing successfully on retry');
+                }
               } catch (retryError) {
                 console.error('Retry play failed:', retryError);
                 setError('Nu se poate porni camera. Încercați să reîncărcați pagina.');
               }
-            }, 100);
+            }, 500);
           }
         };
 
@@ -135,8 +179,18 @@ export default function ScannerPage() {
           // Video is already loaded
           playVideo();
         } else {
-          videoRef.current.onloadedmetadata = playVideo;
-          videoRef.current.oncanplay = playVideo;
+          videoRef.current.onloadedmetadata = () => {
+            console.log('Video metadata loaded');
+            playVideo();
+          };
+          videoRef.current.oncanplay = () => {
+            console.log('Video can play');
+            playVideo();
+          };
+          videoRef.current.onloadeddata = () => {
+            console.log('Video data loaded');
+            playVideo();
+          };
         }
       }
     } catch (err) {
@@ -296,7 +350,7 @@ export default function ScannerPage() {
       </div>
 
       {/* Camera View */}
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-full min-h-screen">
         <video
           ref={videoRef}
           autoPlay
@@ -305,13 +359,21 @@ export default function ScannerPage() {
           webkit-playsinline="true"
           controls={false}
           disablePictureInPicture
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectFit: 'cover' }}
+          className="absolute inset-0 w-full h-full object-cover z-10"
+          style={{
+            objectFit: 'cover',
+            width: '100%',
+            height: '100%',
+            minHeight: '100vh',
+            background: 'transparent',
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)'
+          }}
         />
 
         {/* Start Camera Button for iOS */}
         {showStartButton && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-40">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="text-center">
               <button
                 onClick={startCamera}
@@ -326,9 +388,12 @@ export default function ScannerPage() {
           </div>
         )}
 
+        {/* Dark overlay around scanning area - only show when camera is started */}
+        {cameraStarted && <div className="absolute inset-0 bg-black/30 z-20"></div>}
+
         {/* Barcode Scanning Rectangle - only show when camera is started */}
         {cameraStarted && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center z-30">
             <div className="relative">
               {/* Yellow Rectangle Border */}
               <div className="w-80 h-48 border-4 border-yellow-400 rounded-lg relative">
@@ -352,8 +417,12 @@ export default function ScannerPage() {
           </div>
         )}
 
-        {/* Dark overlay around scanning area - only show when camera is started */}
-        {cameraStarted && <div className="absolute inset-0 bg-black/30"></div>}
+        {/* Video status indicator for debugging */}
+        {cameraStarted && (
+          <div className="absolute top-4 right-4 z-40 bg-green-500 text-white px-2 py-1 rounded text-xs">
+            Camera ON
+          </div>
+        )}
       </div>
 
       {/* Bottom Navigation */}
