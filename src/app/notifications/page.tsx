@@ -15,52 +15,76 @@ export default function NotificationsPage() {
 
   const notifications = [
     {
-      icon: 'star',
+      icon: '/icons/big_star_icon.png',
       title: 'Felicitari!',
-      description: 'Ai ieșit pe locul 2 săptămâna trecută.\nLorem ipsum dolor sit amet, consectetur adipiscing elit ipsum dolor sit amet.',
+      description: 'Ai ieșit pe <strong>locul 2</strong> în provocarea săptămânii trecute! Ești pe drumul cel bun către recompense și mai mari.',
       iconBg: 'bg-green-500'
     },
     {
-      icon: 'clock',
+      icon: '/icons/progress_bar_icon.png',
       title: 'Grabeste-te!',
-      description: 'Mai ai la dispoziție <strong>14 zile</strong> pentru a finaliza provocarea lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum dolor sit amet.',
-      iconBg: 'bg-green-500'
+      description: 'Mai ai la dispoziție <strong>14 zile</strong> pentru a finaliza provocarea lunară. Ai nevoie de încă <strong>20 bonuri</strong> pentru a câștiga recompensa de 15 RON.',
+      iconBg: 'bg-orange-500'
     },
     {
-      icon: 'barcode',
+      icon: '/icons/provocari_icon.png',
       title: 'Noua provocare!',
-      description: 'A început lorem ipsum dolor sit amet, consectetur adipiscing elit <strong>strange 1 500 peturi</strong> si câștiga un <strong>voucher 10%</strong> utilizabil la toți partenerii.',
+      description: 'A început o nouă provocare! Scanează <strong>100 bonuri</strong> în următoarele 30 de zile și câștiga un <strong>voucher de 25 RON</strong> utilizabil la toți partenerii.',
       iconBg: 'bg-yellow-400'
     },
     {
-      icon: 'gift',
+      icon: '/icons/wallet_icon.png',
       title: 'Premiu disponibil!',
       description: 'Ai câștigat un <strong>voucher de 50 RON</strong>! Folosește-l în următoarele <strong>30 de zile</strong> la oricare dintre partenerii noștri.',
       iconBg: 'bg-purple-500'
     },
     {
-      icon: 'users',
+      icon: '/icons/user_icon.png',
       title: 'Prieteni noi!',
       description: '<strong>Maria și Alex</strong> au acceptat invitația ta! Vei primi <strong>10 RON bonus</strong> pentru fiecare prieten care scanează primul bon.',
       iconBg: 'bg-blue-500'
     },
     {
-      icon: 'trophy',
+      icon: '/icons/badge_icon.png',
       title: 'Locul 1 în provocare!',
-      description: 'Ești pe primul loc în provocarea săptămânii! Continuă să colectezi bonuri pentru a păstra poziția.',
-      iconBg: 'bg-gold-500'
+      description: 'Ești pe primul loc în provocarea săptămânii! Continuă să colectezi bonuri pentru a păstra poziția și a câștiga premiul mare.',
+      iconBg: 'bg-yellow-400'
     },
     {
-      icon: 'warning',
+      icon: '/icons/notificari_icon.png',
       title: 'Voucherul expiră!',
-      description: 'Voucherul tău de 25 RON va expira în 3 zile. Nu uita să îl folosești la următoarea cumpărătură.',
+      description: 'Voucherul tău de <strong>25 RON</strong> va expira în <strong>3 zile</strong>. Nu uita să îl folosești la următoarea cumpărătură.',
       iconBg: 'bg-red-500'
     },
     {
-      icon: 'star',
+      icon: '/icons/star_icon.png',
       title: 'Bonus weekend!',
-      description: 'Această sâmbătă și duminică primești dublu puncte pentru toate bonurile scanate. Profită de ofertă!',
+      description: 'Această sâmbătă și duminică primești <strong>dublu puncte</strong> pentru toate bonurile scanate. Profită de ofertă!',
       iconBg: 'bg-green-500'
+    },
+    {
+      icon: '/icons/donate_icon.png',
+      title: 'Donație realizată!',
+      description: 'Ai donat cu succes <strong>50 RON</strong> către <strong>Daruiește Aripi</strong>. Mulțumim pentru generozitatea ta!',
+      iconBg: 'bg-pink-500'
+    },
+    {
+      icon: '/icons/receipt_icon.png',
+      title: 'Bon nou scanat!',
+      description: 'Ai scanat un bon de <strong>127 RON</strong> de la Mega Image. Ai primit <strong>12 puncte</strong> pentru acest bon.',
+      iconBg: 'bg-green-500'
+    },
+    {
+      icon: '/icons/transfer_icon_green.png',
+      title: 'Transfer realizat!',
+      description: 'Ai transferat cu succes <strong>100 RON</strong> către <strong>Ana M.</strong> Transferul a fost procesat instant.',
+      iconBg: 'bg-green-500'
+    },
+    {
+      icon: '/icons/wallet_statistics_icon.png',
+      title: 'Statistici lunare!',
+      description: 'În luna aceasta ai scanat <strong>45 bonuri</strong> și ai economisit <strong>230 RON</strong>. Performanță excelentă!',
+      iconBg: 'bg-blue-500'
     }
   ];
 
@@ -80,58 +104,13 @@ export default function NotificationsPage() {
             <div key={index} className="rounded-4xl p-6 relative overflow-hidden" style={{ backgroundColor: '#B8E6C1' }}>
               <div className="flex items-start space-x-4">
                 <div className={`w-12 h-12 ${notification.iconBg} rounded-full flex items-center justify-center flex-shrink-0`}>
-                  {notification.icon === 'star' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-                    </svg>
-                  )}
-                  {notification.icon === 'clock' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                      <circle cx="12" cy="12" r="10" />
-                      <polyline points="12,6 12,12 16,14" />
-                    </svg>
-                  )}
-                  {notification.icon === 'barcode' && (
-                    <Image
-                      src="/barcode.png"
-                      alt="Barcode"
-                      width={20}
-                      height={20}
-                      className="w-5 h-5"
-                    />
-                  )}
-                  {notification.icon === 'gift' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                      <polyline points="20,12 20,22 4,22 4,12" />
-                      <rect x="2" y="7" width="20" height="5" />
-                      <line x1="12" y1="22" x2="12" y2="7" />
-                      <path d="m5,7 7,-5 7,5" />
-                    </svg>
-                  )}
-                  {notification.icon === 'users' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="m22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  )}
-                  {notification.icon === 'trophy' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                      <path d="M4 22h16" />
-                      <path d="M10 14.66V17c0 .55.47.98.97 1.21C12.04 18.75 13 20.24 13 22" />
-                      <path d="M14 14.66V17c0 .55-.47.98-.97 1.21C11.96 18.75 11 20.24 11 22" />
-                      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-                    </svg>
-                  )}
-                  {notification.icon === 'warning' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                      <path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                      <line x1="12" y1="9" x2="12" y2="13" />
-                      <line x1="12" y1="17" x2="12.01" y2="17" />
-                    </svg>
-                  )}
+                  <Image
+                    src={notification.icon}
+                    alt={notification.title}
+                    width={24}
+                    height={24}
+                    className="w-6 h-6 filter brightness-0 invert"
+                  />
                 </div>
                 <div className="flex-1 pr-6">
                   <h3 className="text-xl font-euclid-bold text-black mb-3">{notification.title}</h3>
@@ -154,7 +133,7 @@ export default function NotificationsPage() {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="m15 18-6-6 6-6" />
@@ -164,7 +143,7 @@ export default function NotificationsPage() {
         {/* Scan Button */}
         <button
           onClick={() => router.push('/scanner')}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <Image
             src="/icons/open_camera_icon.png"

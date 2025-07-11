@@ -133,7 +133,7 @@ export default function MapboxMap() {
         </div>
 
         {/* Location Button */}
-        <button className="w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all">
+        <button className="w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all touchable-opacity">
           <Image
             src="/icons/location_icon.png"
             alt="Location"

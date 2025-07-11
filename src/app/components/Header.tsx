@@ -25,6 +25,12 @@ export default function Header({ userName, balance, currency, showTitle, title }
       case 'Portofel':
         router.push('/wallet');
         break;
+      case 'Provocari':
+        router.push('/challenges');
+        break;
+      case 'Invita prieteni':
+        router.push('/invite-a-friend');
+        break;
       case 'Logout':
         router.push('/login');
         break;
@@ -37,14 +43,14 @@ export default function Header({ userName, balance, currency, showTitle, title }
   };
 
   const menuItems = [
-    { icon: '/icons/notificari_icon.png', label: 'Notificari', badge: '2', color: 'text-green-400' },
-    { icon: '/icons/portofel_icon.png', label: 'Portofel', color: 'text-green-400' },
-    { icon: '/icons/provocari_icon.png', label: 'Provocari', color: 'text-green-400' },
-    { icon: '/icons/profil_icon.png', label: 'Profil', color: 'text-green-400' },
-    { icon: '/icons/provocari_icon.png', label: 'Invita prieteni', color: 'text-green-400' },
-    { icon: '/icons/setari_icon.png', label: 'Setari', color: 'text-green-400' },
-    { icon: '/icons/ajutor_icon.png', label: 'Ajutor', color: 'text-green-400' },
-    { icon: '/icons/logout_icon.png', label: 'Logout', color: 'text-red-400' },
+    { icon: '/icons/notificari_icon.png', label: 'Notificari', badge: '2', color: 'text-green-400', width: 21, height: 24 },
+    { icon: '/icons/portofel_icon.png', label: 'Portofel', color: 'text-green-400', width: 24, height: 18 },
+    { icon: '/icons/provocari_icon.png', label: 'Provocari', color: 'text-green-400', width: 24, height: 24 },
+    { icon: '/icons/profil_icon.png', label: 'Profil', color: 'text-green-400', width: 21, height: 24 },
+    { icon: '/icons/provocari_icon.png', label: 'Invita prieteni', color: 'text-green-400', width: 24, height: 24 },
+    { icon: '/icons/setari_icon.png', label: 'Setari', color: 'text-green-400', width: 24, height: 24 },
+    { icon: '/icons/ajutor_icon.png', label: 'Ajutor', color: 'text-green-400', width: 11, height: 20 },
+    { icon: '/icons/logout_icon.png', label: 'Logout', color: 'text-red-400', width: 24, height: 24 },
   ];
 
   return (
@@ -85,7 +91,7 @@ export default function Header({ userName, balance, currency, showTitle, title }
           {/* Menu Button - Floating */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="w-[62px]  h-[62px] rounded-full flex items-center justify-center flex-shrink-0"
+            className="w-[62px]  h-[62px] rounded-full flex items-center justify-center flex-shrink-0 touchable-opacity"
             style={{ backgroundColor: yellow }}
           >
             <Image
@@ -112,11 +118,11 @@ export default function Header({ userName, balance, currency, showTitle, title }
         }`}>
         <div className="flex flex-col h-full">
           {/* Menu Items */}
-          <div className="flex-1 px-6 py-8 space-y-6">
+          <div className="flex-1 px-8 py-16 space-y-4">
             {menuItems.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-4 cursor-pointer hover:bg-gray-800 p-3 rounded-lg transition-colors"
+                className="flex items-center space-x-4 cursor-pointer hover:bg-gray-800 p-4 rounded-lg transition-colors"
                 onClick={() => handleMenuItemClick(item.label)}
               >
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -124,9 +130,9 @@ export default function Header({ userName, balance, currency, showTitle, title }
                     <Image
                       src={item.icon}
                       alt={item.label}
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
+                      width={item.width}
+                      height={item.height}
+                      className={`w-[${item.width}px] h-[${item.height}px]`}
                     />
                   ) : (
                     <div className={`text-2xl ${item.color}`}>
@@ -144,18 +150,6 @@ export default function Header({ userName, balance, currency, showTitle, title }
             ))}
           </div>
 
-          {/* Close Button */}
-          <div className="p-6 pb-8 flex justify-center">
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center hover:bg-yellow-500 transition-colors"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-black">
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
     </>

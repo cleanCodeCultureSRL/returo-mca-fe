@@ -16,7 +16,7 @@ export default function OnboardingScreen2() {
     router.push('/onboarding_screen_3');
   };
   return (
-    <div className="fixed inset-0 bg-gray-50 flex flex-col">
+    <div className="fixed inset-0 flex flex-col">
       <ThemeColor color="#ffffff" />
 
       {/* Main Content Area */}
@@ -63,7 +63,7 @@ export default function OnboardingScreen2() {
           {/* Back Button */}
           <button
             onClick={handleBack}
-            className="bg-black text-white px-4 py-3 rounded-full border-4 border-black hover:bg-gray-800 transition-colors"
+            className="bg-black text-white px-4 py-3 rounded-full border-4 border-black hover:bg-gray-800 transition-colors touchable-opacity"
           >
             <svg
               width="24"
@@ -92,7 +92,7 @@ export default function OnboardingScreen2() {
           {/* Next Button */}
           <button
             onClick={handleNext}
-            className="bg-black text-white px-4 py-3 rounded-full border-4 border-black hover:bg-gray-800 transition-colors"
+            className="bg-black text-white px-4 py-3 rounded-full border-4 border-black hover:bg-gray-800 transition-colors touchable-opacity"
           >
             <svg
               width="24"

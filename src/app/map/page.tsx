@@ -232,6 +232,7 @@ export default function MapPage() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [currentUserLocation, setCurrentUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const currentLocationMarker = useRef<mapboxgl.Marker | null>(null);
+  const [showNavigationModal, setShowNavigationModal] = useState(false);
 
   useEffect(() => {
     // Clean up any existing map instance
@@ -373,43 +374,65 @@ export default function MapPage() {
   // Open navigation apps (Google Maps or Waze)
   const openNavigationApp = () => {
     if (!selectedLocation) return;
+    setShowNavigationModal(true);
+  };
+
+  const handleNavigationChoice = (app: 'google' | 'apple' | 'waze') => {
+    if (!selectedLocation) return;
 
     const destination = `${selectedLocation.latitude},${selectedLocation.longitude}`;
 
-    // Create a modal or action sheet for user to choose
-    const userChoice = window.confirm(
-      `Navigate to ${selectedLocation.name}?\n\nOK - Open Google Maps\nCancel - Open Waze`
-    );
+    switch (app) {
+      case 'google':
+        // Try to open Google Maps
+        const googleMapsUrl = `https://maps.google.com/maps?daddr=${destination}&dirflg=d`;
+        const googleMapsApp = `comgooglemaps://?daddr=${destination}&directionsmode=driving`;
 
-    if (userChoice) {
-      // Try to open Google Maps
-      const googleMapsUrl = `https://maps.google.com/maps?daddr=${destination}&dirflg=d`;
-      const googleMapsApp = `comgooglemaps://?daddr=${destination}&directionsmode=driving`;
+        // Try native app first, fallback to web
+        const googleLink = document.createElement('a');
+        googleLink.href = googleMapsApp;
+        googleLink.click();
 
-      // Try native app first, fallback to web
-      const link = document.createElement('a');
-      link.href = googleMapsApp;
-      link.click();
+        // Fallback to web version after a short delay
+        setTimeout(() => {
+          window.open(googleMapsUrl, '_blank');
+        }, 1000);
+        break;
 
-      // Fallback to web version after a short delay
-      setTimeout(() => {
-        window.open(googleMapsUrl, '_blank');
-      }, 1000);
-    } else {
-      // Try to open Waze
-      const wazeUrl = `https://waze.com/ul?ll=${destination}&navigate=yes&zoom=17`;
-      const wazeApp = `waze://?ll=${destination}&navigate=yes`;
+      case 'apple':
+        // Try to open Apple Maps
+        const appleMapsUrl = `http://maps.apple.com/?daddr=${destination}&dirflg=d`;
+        const appleMapsApp = `maps://?daddr=${destination}&dirflg=d`;
 
-      // Try native app first, fallback to web
-      const link = document.createElement('a');
-      link.href = wazeApp;
-      link.click();
+        // Try native app first, fallback to web
+        const appleLink = document.createElement('a');
+        appleLink.href = appleMapsApp;
+        appleLink.click();
 
-      // Fallback to web version after a short delay
-      setTimeout(() => {
-        window.open(wazeUrl, '_blank');
-      }, 1000);
+        // Fallback to web version after a short delay
+        setTimeout(() => {
+          window.open(appleMapsUrl, '_blank');
+        }, 1000);
+        break;
+
+      case 'waze':
+        // Try to open Waze
+        const wazeUrl = `https://waze.com/ul?ll=${destination}&navigate=yes&zoom=17`;
+        const wazeApp = `waze://?ll=${destination}&navigate=yes`;
+
+        // Try native app first, fallback to web
+        const wazeLink = document.createElement('a');
+        wazeLink.href = wazeApp;
+        wazeLink.click();
+
+        // Fallback to web version after a short delay
+        setTimeout(() => {
+          window.open(wazeUrl, '_blank');
+        }, 1000);
+        break;
     }
+
+    setShowNavigationModal(false);
   };
 
   // Center map on current user location
@@ -525,7 +548,7 @@ export default function MapPage() {
 
       {/* Header - Absolutely positioned over the map */}
       <div className="absolute top-0 left-0 right-0 z-10">
-        <Header userName="Andrei" balance="1.832" currency="Ron" />
+        <Header userName="Andrei" balance="345,5" currency="Ron" />
       </div>
 
       {/* Center Position Button */}
@@ -541,7 +564,7 @@ export default function MapPage() {
       >
         <button
           onClick={centerOnCurrentLocation}
-          className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all"
+          className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all touchable-opacity"
         >
           <Image
             src="/icons/center_position_icon.png"
@@ -604,13 +627,13 @@ export default function MapPage() {
           <div className="flex flex-col h-full space-y-6">
             {/* Location Header */}
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                 <Image
                   src="/icons/map_location_icon.png"
                   alt="Location"
                   width={32}
                   height={32}
-                  className="w-8 h-8"
+                  className="w-[32px] h-[40px]"
                 />
               </div>
               <div className="flex-1">
@@ -712,7 +735,7 @@ export default function MapPage() {
                         alt="Location"
                         width={24}
                         height={24}
-                        className="w-6 h-6"
+                        className="w-[25px] h-[31px]"
                       />
                     </div>
                     <div className="flex-1">
@@ -742,7 +765,7 @@ export default function MapPage() {
               router.push('/home');
             }
           }}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="m15 18-6-6 6-6" />
@@ -751,7 +774,7 @@ export default function MapPage() {
 
         <button
           onClick={() => router.push('/scanner')}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <Image
             src="/icons/open_camera_icon.png"
@@ -765,7 +788,7 @@ export default function MapPage() {
         {selectedLocation ? (
           <button
             onClick={openNavigationApp}
-            className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+            className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
           >
             <Image
               src="/icons/navigate_icon.png"
@@ -779,6 +802,113 @@ export default function MapPage() {
           <div className="w-16 h-16"></div> /* Spacer for symmetry */
         )}
       </div>
+
+      {/* Navigation App Selection Modal */}
+      {showNavigationModal && (
+        <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
+          {/* Invisible backdrop for click outside to close */}
+          <div
+            className="absolute inset-0 pointer-events-auto bg-black bg-opacity-50"
+            onClick={() => setShowNavigationModal(false)}
+          ></div>
+
+          {/* Modal Content */}
+          <div className="relative w-full max-w-md bg-white rounded-t-3xl p-6 animate-slide-up pointer-events-auto">
+            <div className="text-center">
+              {/* Title */}
+              <div className="mb-6">
+                <h2 className="text-black text-xl font-euclid-bold mb-2">
+                  Navighează către
+                </h2>
+                <p className="text-gray-600 text-base font-euclid-regular">
+                  {selectedLocation?.name}
+                </p>
+              </div>
+
+              {/* Navigation Apps */}
+              <div className="space-y-4 mb-6">
+                {/* Google Maps */}
+                <button
+                  onClick={() => handleNavigationChoice('google')}
+                  className="w-full bg-gray-50 hover:bg-gray-100 rounded-2xl p-4 flex items-center space-x-4 transition-colors touchable-opacity border-2 border-transparent hover:border-gray-200"
+                >
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-white">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-black text-lg font-euclid-bold">Google Maps</h3>
+                    <p className="text-gray-600 text-sm font-euclid-regular">Navigare cu Google Maps</p>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </div>
+                </button>
+
+                {/* Apple Maps */}
+                <button
+                  onClick={() => handleNavigationChoice('apple')}
+                  className="w-full bg-gray-50 hover:bg-gray-100 rounded-2xl p-4 flex items-center space-x-4 transition-colors touchable-opacity border-2 border-transparent hover:border-gray-200"
+                >
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-white">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-black text-lg font-euclid-bold">Apple Maps</h3>
+                    <p className="text-gray-600 text-sm font-euclid-regular">Navigare cu Apple Maps</p>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </div>
+                </button>
+
+                {/* Waze */}
+                <button
+                  onClick={() => handleNavigationChoice('waze')}
+                  className="w-full bg-gray-50 hover:bg-gray-100 rounded-2xl p-4 flex items-center space-x-4 transition-colors touchable-opacity border-2 border-transparent hover:border-gray-200"
+                >
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-white">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor" />
+                        <circle cx="12" cy="9" r="1.5" fill="white" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-black text-lg font-euclid-bold">Waze</h3>
+                    <p className="text-gray-600 text-sm font-euclid-regular">Navigare cu Waze</p>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </div>
+                </button>
+              </div>
+
+              {/* Cancel Button */}
+              <button
+                onClick={() => setShowNavigationModal(false)}
+                className="w-full bg-gray-200 text-black py-4 rounded-2xl font-euclid-bold text-lg hover:bg-gray-300 transition-colors touchable-opacity"
+              >
+                Anulează
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

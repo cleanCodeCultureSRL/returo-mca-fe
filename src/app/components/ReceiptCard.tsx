@@ -23,7 +23,7 @@ export default function ReceiptCard({ receiptNumber, date, amount, retailer, sta
             />
           </div>
           <div>
-            <p className="text-black text-sm text-base font-euclid-semibold">Receipt</p>
+            <p className="text-black text-sm text-base font-euclid-semibold">Voucher</p>
             <p className="text-black text-lg font-euclid-bold">{receiptNumber}</p>
           </div>
         </div>
@@ -48,8 +48,8 @@ export default function ReceiptCard({ receiptNumber, date, amount, retailer, sta
           <span className="text-black text-sm font-euclid-bold">{retailer}</span>
         </div>
         <div className={`px-2 py-1 rounded-full text-xs font-euclid-semibold ${status === 'disponibile' ? 'bg-green-100 text-green-800' :
-            status === 'utilizate' ? 'bg-blue-100 text-blue-800' :
-              'bg-red-100 text-red-800'
+          status === 'utilizate' ? 'bg-blue-100 text-blue-800' :
+            'bg-red-100 text-red-800'
           }`}>
           {status === 'disponibile' ? 'Disponibil' :
             status === 'utilizate' ? 'Utilizat' :

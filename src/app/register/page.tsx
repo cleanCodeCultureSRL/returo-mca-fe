@@ -64,7 +64,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors touchable-opacity"
               >
                 {showPassword ? (
                   // Eye open icon
@@ -94,7 +94,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors touchable-opacity"
               >
                 {showConfirmPassword ? (
                   // Eye open icon
@@ -132,14 +132,14 @@ export default function RegisterPage() {
         <div className="text-center mb-4">
           <button
             onClick={handleLoginLink}
-            className="text-black font-bold hover:underline font-euclid-bold"
+            className="text-black font-bold hover:underline font-euclid-bold touchable-opacity"
           >
             Intră în cont
           </button>
         </div>
         <button
           onClick={handleRegister}
-          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors font-euclid-bold"
+          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors font-euclid-bold touchable-opacity "
         >
           Înregistrează-te
         </button>

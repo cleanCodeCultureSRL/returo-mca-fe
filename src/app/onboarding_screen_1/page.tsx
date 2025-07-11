@@ -63,9 +63,9 @@ export default function OnboardingScreen1() {
           {/* Skip Button */}
           <button
             onClick={handleSkip}
-            className="bg-white text-black px-6 py-3 font-bold rounded-full border-2 border-black font-medium"
+            className="bg-white text-black px-6 py-3 font-bold rounded-full border-2 border-black font-medium touchable-opacity"
           >
-            Skip
+            Sari
           </button>
 
           {/* Progress Dots - Centered on entire screen */}
@@ -78,7 +78,7 @@ export default function OnboardingScreen1() {
           {/* Next Button */}
           <button
             onClick={handleNext}
-            className="bg-black text-white px-4 py-3 rounded-full border-4 border-black hover:bg-gray-800 transition-colors"
+            className="bg-black text-white px-4 py-3 rounded-full border-4 border-black hover:bg-gray-800 transition-colors touchable-opacity"
           >
             <svg
               width="24"

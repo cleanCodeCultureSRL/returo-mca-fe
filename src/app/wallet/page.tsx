@@ -22,6 +22,10 @@ export default function WalletPage() {
     router.push('/transfer');
   };
 
+  const handleDonate = () => {
+    router.push('/donate');
+  };
+
   const transactions = [
     { retailer: 'Kaufland', receiptNumber: '00044728', amount: '47,5 RON', time: '17/02/2025 13:47' },
     { retailer: 'Carrefour', receiptNumber: '00098432', amount: '23,5 RON', time: '19/02/2025 10:32' },
@@ -56,7 +60,7 @@ export default function WalletPage() {
             <h2 className="text-white text-lg font-euclid-semibold mb-2">Soldul tău total</h2>
 
             <div className="text-black text-4xl font-azo-bold">
-              1.832 <span className="text-xl font-azo-regular">Ron</span>
+              345,5 <span className="text-xl font-azo-regular">Ron</span>
             </div>
 
             <p className="text-black text-sm font-euclid-semibold">Mai puțin CO₂</p>
@@ -94,7 +98,7 @@ export default function WalletPage() {
           {/* Transfer Button */}
           <button
             onClick={handleTransfer}
-            className="flex-1 bg-black rounded-4xl h-[62px] flex items-center hover:bg-gray-800 transition-colors"
+            className="flex-1 bg-black rounded-4xl h-[62px] flex items-center hover:bg-gray-800 transition-colors touchable-opacity"
           >
             <div className="flex-1 px-4 py-3">
               <p className="text-l font-euclid-semibold text-left" style={{ color: primary.green }}>Transferă</p>
@@ -112,10 +116,13 @@ export default function WalletPage() {
           </button>
 
           {/* Donate Button */}
-          <div className="flex-1 bg-black rounded-4xl h-[62px] flex items-center">
+          <button
+            onClick={handleDonate}
+            className="flex-1 bg-black rounded-4xl h-[62px] flex items-center hover:bg-gray-800 transition-colors touchable-opacity"
+          >
             <div className="flex-1 px-4 py-3">
-              <p className="text-l font-euclid-semibold" style={{ color: primary.green }}>Donează</p>
-              <p className="text-white text-sm font-euclid-regular">sold</p>
+              <p className="text-l font-euclid-semibold text-left" style={{ color: primary.green }}>Donează</p>
+              <p className="text-white text-sm font-euclid-regular text-left">sold</p>
             </div>
             <div className="w-[63px] h-[63px]  bg-white rounded-full flex items-center justify-center border-2 border-white">
               <Image
@@ -126,7 +133,7 @@ export default function WalletPage() {
                 className="w-6 h-6"
               />
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Transaction History */}
@@ -163,7 +170,7 @@ export default function WalletPage() {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="m15 18-6-6 6-6" />
@@ -173,7 +180,7 @@ export default function WalletPage() {
         {/* Scan Button */}
         <button
           onClick={() => router.push('/scanner')}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <Image
             src="/icons/open_camera_icon.png"
@@ -187,6 +194,6 @@ export default function WalletPage() {
         {/* Spacer for symmetry */}
         <div className="w-16 h-16"></div>
       </div>
-    </div>
+    </div >
   );
 } 

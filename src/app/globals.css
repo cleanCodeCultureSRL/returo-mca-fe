@@ -173,3 +173,39 @@ body {
 .animate-slide-up {
   animation: slideUp 0.3s ease-out;
 }
+
+/* Touch Feedback Animations (TouchableOpacity-like) */
+.touchable-opacity {
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.touchable-opacity:active {
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.touchable-opacity-light {
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.touchable-opacity-light:active {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+
+.touchable-scale {
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.touchable-scale:active {
+  transform: scale(0.95);
+}

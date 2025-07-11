@@ -134,7 +134,7 @@ export default function VoucherHistoryPage() {
       <div className="fixed top-22 left-0 right-0 z-30 flex space-x-2 pt-4 px-4 pb-4" style={{ backgroundColor: primary.lightGreen }}>
         <button
           onClick={() => handleFilterChange('disponibile')}
-          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1 ${selectedFilter === 'disponibile' ? '' : 'bg-white'
+          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold touchable-opacity flex-1 ${selectedFilter === 'disponibile' ? '' : 'bg-white'
             }`}
           style={{ backgroundColor: selectedFilter === 'disponibile' ? primary.green : undefined }}
         >
@@ -142,7 +142,7 @@ export default function VoucherHistoryPage() {
         </button>
         <button
           onClick={() => handleFilterChange('utilizate')}
-          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1 ${selectedFilter === 'utilizate' ? '' : 'bg-white'
+          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold  touchable-opacity flex-1 ${selectedFilter === 'utilizate' ? '' : 'bg-white'
             }`}
           style={{ backgroundColor: selectedFilter === 'utilizate' ? primary.green : undefined }}
         >
@@ -150,7 +150,7 @@ export default function VoucherHistoryPage() {
         </button>
         <button
           onClick={() => handleFilterChange('expirate')}
-          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold flex-1 ${selectedFilter === 'expirate' ? '' : 'bg-white'
+          className={`text-black px-2 py-3 rounded-2xl text-base font-euclid-semibold touchable-opacity flex-1 ${selectedFilter === 'expirate' ? '' : 'bg-white'
             }`}
           style={{ backgroundColor: selectedFilter === 'expirate' ? primary.green : undefined }}
         >
@@ -180,7 +180,7 @@ export default function VoucherHistoryPage() {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="m15 18-6-6 6-6" />
@@ -190,7 +190,7 @@ export default function VoucherHistoryPage() {
         {/* Scan Button */}
         <button
           onClick={() => router.push('/scanner')}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <Image
             src="/icons/open_camera_icon.png"
@@ -270,7 +270,7 @@ export default function VoucherHistoryPage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={handleCloseModal}
-                className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+                className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <path d="m15 18-6-6 6-6" />
@@ -278,7 +278,7 @@ export default function VoucherHistoryPage() {
               </button>
               <button
                 onClick={handleUseVoucher}
-                className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors"
+                className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
               >
                 Utilizeaza
               </button>

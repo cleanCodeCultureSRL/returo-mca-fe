@@ -148,7 +148,7 @@ export default function TransferPage() {
               height={24}
               className="w-[24px] h-[18px] mr-3"
             />
-            <div className="text-white text-4xl font-azo-bold">1.832 <span className="text-2xl">Ron</span></div>
+            <div className="text-white text-4xl font-azo-bold">345,5 <span className="text-2xl">Ron</span></div>
           </div></div>
       </div>
 
@@ -201,7 +201,7 @@ export default function TransferPage() {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="m15 18-6-6 6-6" />
@@ -211,7 +211,7 @@ export default function TransferPage() {
         {/* Transfer Button */}
         <button
           onClick={handleOpenModal}
-          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg"
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
           <Image
             src="/icons/transfer_icon_white.png"
@@ -255,7 +255,7 @@ export default function TransferPage() {
             <div className="mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-white text-xl font-euclid-semibold">Cat vrei sa donezi?</h3>
-                <span className="text-white text-sm font-euclid-regular">Sold: <span className="font-euclid-bold">1.832</span> Ron</span>
+                <span className="text-white text-sm font-euclid-regular">Sold: <span className="font-euclid-bold">345,5</span> Ron</span>
               </div>
               <div className="relative">
                 <input
@@ -272,7 +272,7 @@ export default function TransferPage() {
             <div className="flex items-center justify-between mt-8">
               <button
                 onClick={handleCloseModal}
-                className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+                className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors touchable-opacity"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-black">
                   <path d="m15 18-6-6 6-6" />
@@ -281,7 +281,7 @@ export default function TransferPage() {
 
               <button
                 onClick={handleTransfer}
-                className="flex-1 ml-4 bg-white text-black py-4 rounded-full font-euclid-bold text-lg hover:bg-gray-100 transition-colors"
+                className="flex-1 ml-4 bg-white text-black py-4 rounded-full font-euclid-bold text-lg hover:bg-gray-100 transition-colors touchable-opacity"
               >
                 Transfera
               </button>
@@ -309,7 +309,7 @@ export default function TransferPage() {
 
             <button
               onClick={handleCloseSuccessModal}
-              className="w-full bg-white text-black py-4 rounded-full font-euclid-bold text-lg hover:bg-gray-100 transition-colors"
+              className="w-full bg-white text-black py-4 rounded-full font-euclid-bold text-lg hover:bg-gray-100 transition-colors touchable-opacity"
             >
               Închide
             </button>
