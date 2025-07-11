@@ -33,7 +33,7 @@ export default function ChallengesPage() {
       </div>
 
       {/* Fixed Top Card */}
-      <div className="fixed top-30 left-0 right-0 z-30 px-4" style={{ backgroundColor: primary.lightGreen }}>
+      <div className="fixed top-26 left-0 right-0 z-30 px-4" style={{ backgroundColor: primary.lightGreen }}>
         <div className="bg-black rounded-3xl relative overflow-hidden">
           {/* Green Card - Top Section */}
           <div className="bg-primary-green rounded-3xl p-4 relative overflow-hidden mb-2 border-3 border-black">

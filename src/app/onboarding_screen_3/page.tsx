@@ -94,7 +94,7 @@ export default function OnboardingScreen3() {
             onClick={handleNext}
             className="bg-black text-white px-4 py-3 rounded-full border-4 border-black hover:bg-gray-800 transition-colors font-bold touchable-opacity"
           >
-            Login
+            Intră
           </button>
         </div>
       </div>
