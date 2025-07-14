@@ -24,16 +24,44 @@ export default function ChallengesPage() {
   ];
 
   return (
-    <div className="min-h-screen relative flex flex-col" style={{ backgroundColor: primary.lightGreen }}>
+    <div
+      className="min-h-screen relative flex flex-col overflow-x-hidden"
+      style={{
+        backgroundColor: primary.lightGreen,
+        position: 'relative',
+        height: '100vh',
+        overflow: 'hidden'
+      }}
+    >
       <ThemeColor color="#D2ECDE" />
 
       {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 z-40">
+      <div
+        className="fixed top-0 left-0 right-0 z-40 w-full"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: primary.lightGreen
+        }}
+      >
         <Header showTitle={true} title="Provocari" />
       </div>
 
       {/* Fixed Top Card */}
-      <div className="fixed top-26 left-0 right-0 z-30 px-4" style={{ backgroundColor: primary.lightGreen }}>
+      <div
+        className="fixed top-26 left-0 right-0 z-30 px-4 w-full"
+        style={{
+          backgroundColor: primary.lightGreen,
+          position: 'fixed',
+          top: '6.5rem',
+          left: 0,
+          right: 0,
+          zIndex: 30
+        }}
+      >
         <div className="bg-black rounded-3xl relative overflow-hidden">
           {/* Green Card - Top Section */}
           <div className="bg-primary-green rounded-3xl p-4 relative overflow-hidden mb-2 border-3 border-black">
@@ -99,9 +127,18 @@ export default function ChallengesPage() {
       </div>
 
       {/* Scrollable Leaderboard Section */}
-      <div className="flex-1 overflow-y-auto px-4 pb-24 mt-90" >
+      <div
+        className="flex-1 overflow-y-auto px-4 pb-24 h-full"
+        style={{
+          height: '100vh',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          paddingTop: '18rem',
+          paddingBottom: '6rem'
+        }}
+      >
         {/* Leaderboard Section */}
-        <div className="bg-white rounded-3xl border-3 border-black p-6">
+        <div className="bg-white rounded-3xl border-3 border-black p-6 mt-11">
           <div className="text-center mb-6">
             <h3 className="text-black text-xl font-euclid-semibold mb-2">
               Felicitari! Ai iesit pe locul 2 saptamana trecuta.
@@ -169,7 +206,16 @@ export default function ChallengesPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-8 left-0 right-0 flex items-center justify-between px-6 z-50">
+      <div
+        className="fixed bottom-8 left-0 right-0 flex items-center justify-between px-6 z-50 w-full"
+        style={{
+          position: 'fixed',
+          bottom: '2rem',
+          left: 0,
+          right: 0,
+          zIndex: 50
+        }}
+      >
         {/* Back Button */}
         <button
           onClick={handleBack}

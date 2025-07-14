@@ -450,6 +450,18 @@ export default function VoucherHistoryPage() {
                 <div className="text-3xl font-bold text-black">{selectedVoucher.amount}</div>
                 <div className="text-sm text-gray-600 mt-1">Valoarea voucher-ului</div>
               </div>
+
+              {/* Voucher Status */}
+              <div className="text-center mt-4">
+                <div className={`inline-block px-4 py-2 rounded-full text-sm font-euclid-semibold ${selectedVoucher.status === 'disponibile' ? 'bg-green-100 text-green-800' :
+                  selectedVoucher.status === 'utilizate' ? 'bg-blue-100 text-blue-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                  {selectedVoucher.status === 'disponibile' ? 'Disponibil' :
+                    selectedVoucher.status === 'utilizate' ? 'Utilizat' :
+                      'Expirat'}
+                </div>
+              </div>
             </div>
 
             {/* Barcode */}
@@ -481,12 +493,14 @@ export default function VoucherHistoryPage() {
                   <path d="m15 18-6-6 6-6" />
                 </svg>
               </button>
-              <button
-                onClick={handleCashOut}
-                className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
-              >
-                Cash out
-              </button>
+              {selectedVoucher.status === 'disponibile' && (
+                <button
+                  onClick={handleCashOut}
+                  className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
+                >
+                  Cash out
+                </button>
+              )}
             </div>
           </div>
         </div>

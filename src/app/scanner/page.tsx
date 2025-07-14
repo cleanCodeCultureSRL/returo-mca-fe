@@ -405,7 +405,7 @@ export default function ScannerPage() {
                 <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-yellow-400 rounded-br-lg"></div>
 
                 {/* Scanning line animation */}
-                <div className="absolute inset-0 overflow-hidden rounded-lg">
+                <div className="absolute inset-0 overflow-hidden rounded-lg">w
                   <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-400 animate-pulse"></div>
                 </div>
               </div>
@@ -478,24 +478,27 @@ export default function ScannerPage() {
       {/* Bottom Navigation - hide when modal is shown */}
       {!showSuccessModal && (
         <div className="absolute bottom-8 left-0 right-0 px-6 z-30">
-          {/* Back Button */}
-          <button
-            onClick={handleBack}
-            className="absolute left-6 w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg touchable-opacity"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
+          <div className="flex items-center justify-between">
+            {/* Back Button */}
+            <button
+              onClick={handleBack}
+              className="w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg touchable-opacity"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
 
-          {/* Scan/Capture Button - Centered */}
-          <div className="flex justify-center">
+            {/* Scan/Capture Button - Centered */}
             <button
               onClick={handleCapture}
               className="w-20 h-20 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg border-4 border-white touchable-opacity"
             >
               <div className="w-16 h-16 bg-transparent border-2 border-black rounded-full"></div>
             </button>
+
+            {/* Spacer to keep scan button centered */}
+            <div className="w-16 h-16"></div>
           </div>
         </div>
       )}

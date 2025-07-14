@@ -34,18 +34,46 @@ export default function WalletPage() {
   ];
 
   return (
-    <div className="no-scroll-page" style={{ backgroundColor: primary.lightGreen }}>
+    <div
+      className="min-h-screen relative overflow-x-hidden"
+      style={{
+        backgroundColor: primary.lightGreen,
+        position: 'relative',
+        height: '100vh',
+        overflow: 'hidden'
+      }}
+    >
       <ThemeColor color="#D2ECDE" />
 
-      {/* Header */}
-      <Header showTitle={true} title="Portofel" />
+      {/* Fixed Header */}
+      <div
+        className="fixed top-0 left-0 right-0 z-50 w-full"
+        style={{
+          backgroundColor: primary.lightGreen,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50
+        }}
+      >
+        <Header showTitle={true} title="Portofel" />
+      </div>
 
       {/* Main Content */}
-      <div className="px-4 pb-4 space-y-6">
+      <div
+        className="px-4 pb-24 space-y-6 overflow-y-auto h-full"
+        style={{
+          paddingTop: '96px',
+          height: '100vh',
+          overflowY: 'auto',
+          overflowX: 'hidden'
+        }}
+      >
         {/* Balance Card */}
-        <div className="bg-black rounded-3xl relative overflow-hidden">
+        <div className="bg-black rounded-3xl relative overflow-hidden mt-2">
           {/* Green Card - Top Section */}
-          <div className="bg-primary-green rounded-3xl p-4 relative overflow-hidden mb-2 border-3 border-black">
+          <div className="bg-primary-green rounded-3xl p-4  Arelative overflow-hidden mb-2 border-3 border-black">
             {/* Illustration */}
             <div className="absolute -bottom-2 -right-1 w-24 h-30 z-20">
               <Image
@@ -166,7 +194,16 @@ export default function WalletPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-8 left-0 right-0 flex items-center justify-between px-6 z-50">
+      <div
+        className="fixed bottom-8 left-0 right-0 flex items-center justify-between px-6 z-50 w-full"
+        style={{
+          position: 'fixed',
+          bottom: '2rem',
+          left: 0,
+          right: 0,
+          zIndex: 50
+        }}
+      >
         {/* Back Button */}
         <button
           onClick={handleBack}
@@ -194,6 +231,6 @@ export default function WalletPage() {
         {/* Spacer for symmetry */}
         <div className="w-16 h-16"></div>
       </div>
-    </div >
+    </div>
   );
 } 

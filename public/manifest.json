@@ -8,7 +8,7 @@
   "display_override": ["standalone", "minimal-ui"],
   "background_color": "#39AE70",
   "theme_color": "#39AE70",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "scope": "/",
   "categories": ["lifestyle", "utilities", "environment"],
   "permissions": ["camera"],

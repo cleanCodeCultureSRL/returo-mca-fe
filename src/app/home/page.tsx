@@ -98,13 +98,42 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="ios-pwa-fix min-h-screen" style={{ backgroundColor: primary.lightGreen }}>
+    <div
+      className="min-h-screen relative overflow-x-hidden"
+      style={{
+        backgroundColor: primary.lightGreen,
+        position: 'relative',
+        height: '100vh',
+        overflow: 'hidden'
+      }}
+    >
       <ThemeColor color="#D2ECDE" />
-      {/* Header */}
-      <Header />
+
+      {/* Fixed Header */}
+      <div
+        className="fixed top-0 left-0 right-0 z-50 w-full"
+        style={{
+          backgroundColor: primary.lightGreen,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50
+        }}
+      >
+        <Header />
+      </div>
 
       {/* Main Content */}
-      <div className="px-4 pb-24 space-y-6 mt-1">
+      <div
+        className="px-4 pb-24 space-y-6 overflow-y-auto h-full"
+        style={{
+          paddingTop: '120px',
+          height: '100vh',
+          overflowY: 'auto',
+          overflowX: 'hidden'
+        }}
+      >
         {/* Environmental Impact Card */}
         <div className="bg-black rounded-3xl relative overflow-hidden">
           {/* Green Card - Top Section */}
@@ -211,8 +240,18 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Scan Button - Always visible at bottom center */}
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+      {/* Fixed Bottom Navigation */}
+      <div
+        className="fixed bottom-8 left-0 right-0 flex items-center justify-center px-6 z-50 w-full"
+        style={{
+          position: 'fixed',
+          bottom: '2rem',
+          left: 0,
+          right: 0,
+          zIndex: 50
+        }}
+      >
+        {/* Scan Button - Always visible at bottom center */}
         <button
           onClick={() => router.push('/scanner')}
           className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg touchable-opacity"
@@ -268,6 +307,18 @@ export default function HomePage() {
                 <div className="text-3xl font-bold text-black">{selectedReceipt.amount}</div>
                 <div className="text-sm text-gray-600 mt-1">Valoarea voucher-ului</div>
               </div>
+
+              {/* Voucher Status */}
+              <div className="text-center mt-4">
+                <div className={`inline-block px-4 py-2 rounded-full text-sm font-euclid-semibold ${selectedReceipt.status === 'disponibile' ? 'bg-green-100 text-green-800' :
+                  selectedReceipt.status === 'utilizate' ? 'bg-blue-100 text-blue-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                  {selectedReceipt.status === 'disponibile' ? 'Disponibil' :
+                    selectedReceipt.status === 'utilizate' ? 'Utilizat' :
+                      'Expirat'}
+                </div>
+              </div>
             </div>
 
             {/* Barcode */}
@@ -299,12 +350,14 @@ export default function HomePage() {
                   <path d="m15 18-6-6 6-6" />
                 </svg>
               </button>
-              <button
-                onClick={handleCashOut}
-                className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
-              >
-                Cash out
-              </button>
+              {selectedReceipt.status === 'disponibile' && (
+                <button
+                  onClick={handleCashOut}
+                  className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
+                >
+                  Cash out
+                </button>
+              )}
             </div>
           </div>
         </div>

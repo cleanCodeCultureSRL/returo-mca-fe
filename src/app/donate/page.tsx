@@ -69,8 +69,21 @@ export default function DonatePage() {
     { id: 12, name: 'Asociația Noi Orizonturi', logo: 'NO', color: 'from-emerald-500 to-emerald-700' },
   ];
 
-  // Get 6 featured NGOs
-  const featuredNGOs = romanianNGOs.slice(0, 6);
+  // Helper function to normalize text by removing diacritics
+  const normalizeText = (text: string): string => {
+    return text
+      .normalize('NFD') // Decompose characters with diacritics
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
+      .toLowerCase();
+  };
+
+  // Filter NGOs based on search query (ignoring diacritics)
+  const filteredNGOs = romanianNGOs.filter(ngo =>
+    normalizeText(ngo.name).includes(normalizeText(searchQuery))
+  );
+
+  // Get 6 featured NGOs (either filtered or all)
+  const featuredNGOs = searchQuery ? filteredNGOs : romanianNGOs.slice(0, 6);
 
   // Mock data for donation reports with Romanian NGOs and dates
   const donationReports = [
@@ -82,11 +95,29 @@ export default function DonatePage() {
   ];
 
   return (
-    <div className="min-h-screen relative" style={{ backgroundColor: primary.lightGreen }}>
+    <div
+      className="min-h-screen relative overflow-x-hidden"
+      style={{
+        backgroundColor: primary.lightGreen,
+        position: 'relative',
+        height: '100vh',
+        overflow: 'hidden'
+      }}
+    >
       <ThemeColor color="#D2ECDE" />
 
       {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: primary.lightGreen }}>
+      <div
+        className="fixed top-0 left-0 right-0 z-50 w-full"
+        style={{
+          backgroundColor: primary.lightGreen,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50
+        }}
+      >
         <Header showTitle={true} title="Donează" />
 
         {/* Search Bar */}
@@ -105,178 +136,243 @@ export default function DonatePage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 text-gray-500 text-lg font-euclid-regular outline-none bg-transparent"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="ml-2 w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="px-4 pb-4 space-y-6" style={{ paddingTop: '160px' }}>
+      <div
+        className="px-4 pb-24 space-y-6 overflow-y-auto h-full"
+        style={{
+          paddingTop: '160px',
+          height: '100vh',
+          overflowY: 'auto',
+          overflowX: 'hidden'
+        }}
+      >
 
-        {/* ONG-uri pentru tine Section */}
+        {/* Search Results or Featured NGOs Section */}
         <div>
-          {/* <h2 className="text-black text-2xl font-euclid-bold mb-4">ONG-uri pentru tine</h2> */}
-          <div className="grid grid-cols-3 gap-2 mt-10" >
-            {featuredNGOs.map((ngo) => (
+          {searchQuery && (
+            <div className="mb-4">
+              <h2 className="text-black text-xl font-euclid-bold">
+                {filteredNGOs.length > 0
+                  ? `Rezultate pentru "${searchQuery}" (${filteredNGOs.length})`
+                  : `Niciun rezultat pentru "${searchQuery}"`
+                }
+              </h2>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="text-primary-green text-sm font-euclid-medium mt-2 hover:underline"
+                >
+                  Șterge căutarea
+                </button>
+              )}
+            </div>
+          )}
+
+          {featuredNGOs.length > 0 ? (
+            <div className="grid grid-cols-3 gap-2 mt-10">
+              {featuredNGOs.map((ngo) => (
+                <button
+                  key={ngo.id}
+                  onClick={() => handleNGOClick(ngo)}
+                  className="bg-transparent rounded-2xl p-4 aspect-square flex flex-col items-center justify-center space-y-2 touchable-opacity"
+                >
+                  {/* NGO Logo - Circular with gradient */}
+                  <div className={`w-16 h-16 rounded-full ${ngo.logoImage ? 'bg-white border-2 border-black' : `bg-gradient-to-br ${ngo.color}`} flex items-center justify-center relative overflow-hidden`}>
+                    {ngo.logoImage ? (
+                      <img
+                        src={ngo.logoImage}
+                        alt={ngo.name}
+                        className="w-12 h-12 object-contain z-10"
+                      />
+                    ) : (
+                      <>
+                        {/* Logo Text */}
+                        <span className="text-white text-lg font-euclid-bold z-10">{ngo.logo}</span>
+                        {/* Radial pattern */}
+                        <div className="absolute inset-0 opacity-20">
+                          <div className="w-full h-full bg-white rounded-full transform scale-50"></div>
+                        </div>
+                        {/* Radiating lines */}
+                        <div className="absolute inset-0">
+                          {[...Array(12)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="absolute w-0.5 h-4 bg-white opacity-30 transform-gpu"
+                              style={{
+                                top: '50%',
+                                left: '50%',
+                                transformOrigin: '0 0',
+                                transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-24px)`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <span className="text-black text-sm font-euclid-bold text-center">{ngo.name}</span>
+                </button>
+              ))}
+            </div>
+          ) : searchQuery ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-black text-lg font-euclid-bold mb-2">Nu am găsit rezultate</h3>
+              <p className="text-gray-600 text-sm font-euclid-regular mb-4">
+                Încearcă un alt termen de căutare sau verifică ortografia.
+              </p>
               <button
-                key={ngo.id}
-                onClick={() => handleNGOClick(ngo)}
-                className="bg-transparent rounded-2xl p-4 aspect-square flex flex-col items-center justify-center space-y-2 touchable-opacity"
+                onClick={() => setSearchQuery('')}
+                className="bg-primary-green text-white px-6 py-3 rounded-full font-euclid-bold text-sm hover:bg-green-600 transition-colors"
               >
-                {/* NGO Logo - Circular with gradient */}
-                <div className={`w-16 h-16 rounded-full ${ngo.logoImage ? 'bg-white border-2 border-black' : `bg-gradient-to-br ${ngo.color}`} flex items-center justify-center relative overflow-hidden`}>
-                  {ngo.logoImage ? (
-                    <img
-                      src={ngo.logoImage}
-                      alt={ngo.name}
-                      className="w-12 h-12 object-contain z-10"
-                    />
-                  ) : (
-                    <>
-                      {/* Logo Text */}
-                      <span className="text-white text-lg font-euclid-bold z-10">{ngo.logo}</span>
-                      {/* Radial pattern */}
-                      <div className="absolute inset-0 opacity-20">
+                Vezi toate ONG-urile
+              </button>
+            </div>
+          ) : null}
+        </div>
+
+        {/* All NGOs Section - Hide when searching */}
+        {!searchQuery && (
+          <div className="bg-white rounded-full border-3 border-black overflow-hidden max-h-[60px]">
+            <div className="flex items-center">
+              <div className="flex items-center space-x-3 flex-1 pl-4">
+                {/* Overlapping circular logos */}
+                <div className="flex -space-x-2">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 via-blue-500 to-blue-600 border-2 border-white flex items-center justify-center relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 opacity-30">
                         <div className="w-full h-full bg-white rounded-full transform scale-50"></div>
                       </div>
-                      {/* Radiating lines */}
                       <div className="absolute inset-0">
-                        {[...Array(12)].map((_, i) => (
+                        {[...Array(8)].map((_, j) => (
                           <div
-                            key={i}
-                            className="absolute w-0.5 h-4 bg-white opacity-30 transform-gpu"
+                            key={j}
+                            className="absolute w-0.5 h-2 bg-white opacity-60 transform-gpu"
                             style={{
                               top: '50%',
                               left: '50%',
                               transformOrigin: '0 0',
-                              transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-24px)`,
+                              transform: `translate(-50%, -50%) rotate(${j * 45}deg) translateY(-14px)`,
                             }}
                           />
                         ))}
                       </div>
-                    </>
-                  )}
+                    </div>
+                  ))}
                 </div>
-                <span className="text-black text-sm font-euclid-bold text-center">{ngo.name}</span>
+                <span className="text-black text-sm font-euclid-medium">+ 23k ONG-uri</span>
+              </div>
+              <button
+                onClick={handleViewAll}
+                className="bg-black text-white px-6 py-3 text-sm font-euclid-bold touchable-opacity h-full rounded-r-full"
+              >
+                Vezi toate
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* All NGOs Section */}
-        <div className="bg-white rounded-full border-3 border-black overflow-hidden max-h-[60px]">
-          <div className="flex items-center">
-            <div className="flex items-center space-x-3 flex-1 pl-4">
-              {/* Overlapping circular logos */}
-              <div className="flex -space-x-2">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 via-blue-500 to-blue-600 border-2 border-white flex items-center justify-center relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 opacity-30">
-                      <div className="w-full h-full bg-white rounded-full transform scale-50"></div>
-                    </div>
-                    <div className="absolute inset-0">
-                      {[...Array(8)].map((_, j) => (
-                        <div
-                          key={j}
-                          className="absolute w-0.5 h-2 bg-white opacity-60 transform-gpu"
-                          style={{
-                            top: '50%',
-                            left: '50%',
-                            transformOrigin: '0 0',
-                            transform: `translate(-50%, -50%) rotate(${j * 45}deg) translateY(-14px)`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <span className="text-black text-sm font-euclid-medium">+ 23k ONG-uri</span>
             </div>
-            <button
-              onClick={handleViewAll}
-              className="bg-black text-white px-6 py-3 text-sm font-euclid-bold touchable-opacity h-full rounded-r-full"
-            >
-              Vezi toate
-            </button>
           </div>
-        </div>
+        )}
 
-        {/* Donation Reports Section */}
-        <div className="bg-white rounded-2xl p-4 border-2 border-black">
-          <h2 className="text-black text-lg font-euclid-bold mb-4">Rapoarte donații</h2>
+        {/* Donation Reports Section - Hide when searching */}
+        {!searchQuery && (
+          <div className="bg-white rounded-2xl p-4 border-2 border-black">
+            <h2 className="text-black text-lg font-euclid-bold mb-4">Rapoarte donații</h2>
 
-          <div className="space-y-3">
-            {donationReports.map((donation, index) => (
-              <div key={donation.id}>
-                {(index === 0 || donation.dateGroup !== donationReports[index - 1].dateGroup) && (
-                  <div className="flex items-center my-4">
-                    <span className="text-sm font-euclid-semibold text-gray-600 mr-2">
-                      {donation.dateGroup.split(' •')[0]}
-                    </span>
-                    <span className="text-sm font-euclid-regular text-gray-500">
-                      • {donation.dateGroup.split('• ')[1]}
-                    </span>
-                  </div>
-                )}
+            <div className="space-y-3">
+              {donationReports.map((donation, index) => (
+                <div key={donation.id}>
+                  {(index === 0 || donation.dateGroup !== donationReports[index - 1].dateGroup) && (
+                    <div className="flex items-center my-4">
+                      <span className="text-sm font-euclid-semibold text-gray-600 mr-2">
+                        {donation.dateGroup.split(' •')[0]}
+                      </span>
+                      <span className="text-sm font-euclid-regular text-gray-500">
+                        • {donation.dateGroup.split('• ')[1]}
+                      </span>
+                    </div>
+                  )}
 
-                <div className="flex items-center justify-between ">
-                  <div className="flex items-center">
-                    {/* NGO Logo */}
-                    <div className={`w-[30px] h-[30px] mr-3 rounded-full ${donation.ngo.logoImage ? 'bg-white border-2 border-black' : `bg-gradient-to-br ${donation.ngo.color}`} flex items-center justify-center relative overflow-hidden`}>
-                      {donation.ngo.logoImage ? (
-                        <img
-                          src={donation.ngo.logoImage}
-                          alt={donation.ngo.name}
-                          className="w-4 h-4 object-contain z-10"
-                        />
-                      ) : (
-                        <>
-                          <span className="text-white text-xs font-euclid-bold z-10">{donation.ngo.logo}</span>
-                          <div className="absolute inset-0 opacity-20">
-                            <div className="w-full h-full bg-white rounded-full transform scale-50"></div>
-                          </div>
-                          <div className="absolute inset-0">
-                            {[...Array(8)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="absolute w-0.5 h-1 bg-white opacity-30 transform-gpu"
-                                style={{
-                                  top: '50%',
-                                  left: '50%',
-                                  transformOrigin: '0 0',
-                                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-8px)`,
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </>
-                      )}
+                  <div className="flex items-center justify-between ">
+                    <div className="flex items-center">
+                      {/* NGO Logo */}
+                      <div className={`w-[30px] h-[30px] mr-3 rounded-full ${donation.ngo.logoImage ? 'bg-white border-2 border-black' : `bg-gradient-to-br ${donation.ngo.color}`} flex items-center justify-center relative overflow-hidden`}>
+                        {donation.ngo.logoImage ? (
+                          <img
+                            src={donation.ngo.logoImage}
+                            alt={donation.ngo.name}
+                            className="w-4 h-4 object-contain z-10"
+                          />
+                        ) : (
+                          <>
+                            <span className="text-white text-xs font-euclid-bold z-10">{donation.ngo.logo}</span>
+                            <div className="absolute inset-0 opacity-20">
+                              <div className="w-full h-full bg-white rounded-full transform scale-50"></div>
+                            </div>
+                            <div className="absolute inset-0">
+                              {[...Array(8)].map((_, i) => (
+                                <div
+                                  key={i}
+                                  className="absolute w-0.5 h-1 bg-white opacity-30 transform-gpu"
+                                  style={{
+                                    top: '50%',
+                                    left: '50%',
+                                    transformOrigin: '0 0',
+                                    transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-8px)`,
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      {/* NGO Details */}
+                      <div>
+                        <div className="text-black text-base text-sm font-euclid-regular">{donation.ngo.name}</div>
+                        <div className="text-gray-500 text-sm font-euclid-regular">{donation.date}</div>
+                      </div>
                     </div>
 
-                    {/* NGO Details */}
-                    <div>
-                      <div className="text-black text-base text-sm font-euclid-regular">{donation.ngo.name}</div>
-                      <div className="text-gray-500 text-sm font-euclid-regular">{donation.date}</div>
-                    </div>
+                    {/* Amount */}
+                    <div className="text-black text-sm font-euclid-semibold">{donation.amount}</div>
                   </div>
 
-                  {/* Amount */}
-                  <div className="text-black text-sm font-euclid-semibold">{donation.amount}</div>
+                  {/* Separator line */}
+                  <div className="border-b border-gray-200 mt-2"></div>
                 </div>
-
-                {/* Separator line */}
-                <div className="border-b border-gray-200 mt-2"></div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-8 left-0 right-0 flex items-center justify-between px-6 z-50">
+      <div
+        className="fixed bottom-8 left-0 right-0 flex items-center justify-between px-6 z-50 w-full"
+        style={{
+          position: 'fixed',
+          bottom: '2rem',
+          left: 0,
+          right: 0,
+          zIndex: 50
+        }}
+      >
         {/* Back Button */}
         <button
           onClick={handleBack}

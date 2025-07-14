@@ -88,13 +88,13 @@ export default function LoginPage() {
 
       {/* Login Form */}
       <div className="flex-1 px-6 py-4 -mt-24 z-15">
-        <div className="bg-white rounded-t-4xl p-8 pb-24 border-4 border-b-0 border-black -mx-6 -mb-8 min-h-[calc(100vh-220px)]">
+        <div className="bg-white rounded-t-4xl p-8 pb-24 border-4 border-b-0 border-black -mx-6 -mb-8 min-h-[calc(100vh-220px)] max-h-[667px]:p-6 max-h-[667px]:pb-16">
           {/* Title */}
-          <h1 className="text-3xl font-bold text-black mb-8 font-euclid-bold">Login</h1>
+          <h1 className="text-3xl font-bold text-black mb-8 font-euclid-bold max-h-[667px]:mb-4 max-h-[667px]:text-2xl">Login</h1>
 
           {/* Email Field */}
-          <div className="mb-6">
-            <label className="block text-black font-medium mb-2 font-euclid-regular">E-mail</label>
+          <div className="mb-6 max-h-[667px]:mb-4">
+            <label className="block text-black font-medium mb-2 font-euclid-regular max-h-[667px]:mb-1">E-mail</label>
             <input
               type="email"
               name="email"

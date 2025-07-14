@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "../store/ReduxProvider";
 import AuthStatus from "./components/AuthStatus";
+import OrientationLock from "./components/OrientationLock";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,13 @@ export default function RootLayout({
       <head>
         {/* Viewport - Enhanced for iOS PWA */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+
+        {/* Orientation Lock */}
+        <meta name="screen-orientation" content="portrait" />
+        <meta name="x5-orientation" content="portrait" />
+        <meta name="x5-fullscreen" content="true" />
+        <meta name="full-screen" content="yes" />
+        <meta name="browsermode" content="application" />
 
         {/* Theme Color */}
         <meta name="theme-color" content="#39AE70" />
@@ -81,7 +89,8 @@ export default function RootLayout({
       <body className={`${inter.className} bg-gray-50`} style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
         <ReduxProvider>
           <AuthStatus />
-          <div className="max-w-md mx-auto bg-white pwa-container">
+          <OrientationLock />
+          <div className="max-w-md mx-auto bg-white pwa-container portrait-only">
             {children}
           </div>
         </ReduxProvider>
