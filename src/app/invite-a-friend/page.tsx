@@ -34,7 +34,7 @@ export default function InviteAFriendPage() {
       <ThemeColor color="#D2ECDE" />
 
       {/* Header - Same as home page */}
-      <Header userName="Andrei" balance="1.832,05" currency="Ron" />
+      <Header />
 
       {/* Main Content */}
       <div className="px-4 pb-4 space-y-6 mt-4">

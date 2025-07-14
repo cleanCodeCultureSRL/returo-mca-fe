@@ -548,7 +548,7 @@ export default function MapPage() {
 
       {/* Header - Absolutely positioned over the map */}
       <div className="absolute top-0 left-0 right-0 z-10">
-        <Header userName="Andrei" balance="265,5" currency="Ron" />
+        <Header />
       </div>
 
       {/* Center Position Button */}

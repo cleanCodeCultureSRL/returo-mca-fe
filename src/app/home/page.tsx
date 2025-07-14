@@ -71,7 +71,7 @@ export default function HomePage() {
     <div className="min-h-screen" style={{ backgroundColor: primary.lightGreen }}>
       <ThemeColor color="#D2ECDE" />
       {/* Header */}
-      <Header userName="Andrei" balance="265,5" currency="Ron" />
+      <Header />
 
       {/* Main Content */}
       <div className="px-4 pb-4 space-y-6 mt-1">
