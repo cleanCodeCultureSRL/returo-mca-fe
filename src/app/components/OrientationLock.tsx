@@ -3,6 +3,11 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 
+// Extend the ScreenOrientation interface to include the lock method
+interface ScreenOrientationWithLock extends ScreenOrientation {
+  lock?: (orientation: string) => Promise<void>;
+}
+
 export default function OrientationLock() {
   useEffect(() => {
     // Function to check orientation (for potential future use)
@@ -20,8 +25,8 @@ export default function OrientationLock() {
     const lockOrientation = async () => {
       try {
         // Check if screen orientation API is available
-        if (screen.orientation && screen.orientation.lock) {
-          await screen.orientation.lock('portrait-primary');
+        if (screen.orientation && 'lock' in screen.orientation) {
+          await (screen.orientation as ScreenOrientationWithLock).lock?.('portrait-primary');
         }
       } catch (error) {
         console.log('Screen orientation lock not supported or failed:', error);
