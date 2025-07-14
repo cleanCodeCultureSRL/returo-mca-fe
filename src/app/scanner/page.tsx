@@ -397,7 +397,7 @@ export default function ScannerPage() {
           <div className="absolute inset-0 flex items-center justify-center z-30">
             <div className="relative">
               {/* Yellow Rectangle Border */}
-              <div className="w-80 h-48 border-4 border-yellow-400 rounded-lg relative">
+              <div className="w-100 h-48 border-4 border-yellow-400 rounded-lg relative">
                 {/* Corner indicators */}
                 <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-yellow-400 rounded-tl-lg"></div>
                 <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-yellow-400 rounded-tr-lg"></div>
