@@ -15,6 +15,12 @@ export default function NotificationsPage() {
 
   const notifications = [
     {
+      icon: '/icons/open_camera_icon.png',
+      title: 'Weekendul a fost epic!',
+      description: 'Bună dimineața, campion al weekend-ului! 🎉 Dacă weekendul a fost epic (și sticluțele goale îți confirmă), e timpul să transformi <strong>"durerea de cap"</strong> în <strong>"bani în buzunar"</strong>! Ambalajele alea își fac bagajele pentru RVM-urile RetuRO - hai să le trimitem acasă! 🚀',
+      iconBg: 'bg-green-500'
+    },
+    {
       icon: '/icons/big_star_icon.png',
       title: 'Felicitari!',
       description: 'Ai ieșit pe <strong>locul 2</strong> în provocarea săptămânii trecute! Ești pe drumul cel bun către recompense și mai mari.',

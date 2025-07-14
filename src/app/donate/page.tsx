@@ -420,10 +420,10 @@ export default function DonatePage() {
               {/* Success Message */}
               <div className="mb-6">
                 <h2 className="text-white text-xl font-euclid-bold mb-3">
-                  Donația a fost efectuată
+                  Donația a fost efectuată cu succes!
                 </h2>
                 <p className="text-white text-sm font-euclid-regular">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                  Mulțumim pentru generozitate! Contribuția ta ajută la susținerea unei cauze importante și face o diferență în comunitate.
                 </p>
               </div>
 
