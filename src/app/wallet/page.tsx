@@ -34,7 +34,7 @@ export default function WalletPage() {
   ];
 
   return (
-    <div className="min-h-screen relative" style={{ backgroundColor: primary.lightGreen }}>
+    <div className="no-scroll-page" style={{ backgroundColor: primary.lightGreen }}>
       <ThemeColor color="#D2ECDE" />
 
       {/* Header */}

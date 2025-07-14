@@ -539,7 +539,7 @@ export default function MapPage() {
   }, [isDragging, startY, dragProgress]);
 
   return (
-    <div className="min-h-screen relative">
+    <div className="no-scroll-page">
       <ThemeColor color="#253045" />
       {/* Full Screen Map */}
       <div className="absolute inset-0">

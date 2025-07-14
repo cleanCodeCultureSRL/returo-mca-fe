@@ -98,7 +98,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: primary.lightGreen }}>
+    <div className="ios-pwa-fix" style={{ backgroundColor: primary.lightGreen }}>
       <ThemeColor color="#D2ECDE" />
       {/* Header */}
       <Header />

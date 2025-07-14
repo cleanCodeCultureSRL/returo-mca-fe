@@ -39,8 +39,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Viewport */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        {/* Viewport - Enhanced for iOS PWA */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
 
         {/* Theme Color */}
         <meta name="theme-color" content="#39AE70" />
@@ -78,10 +78,10 @@ export default function RootLayout({
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${inter.className} min-h-screen bg-gray-50 overscroll-none`}>
+      <body className={`${inter.className} bg-gray-50`} style={{ height: '100vh', height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
         <ReduxProvider>
           <AuthStatus />
-          <div className="max-w-md mx-auto bg-white min-h-screen relative">
+          <div className="max-w-md mx-auto bg-white pwa-container">
             {children}
           </div>
         </ReduxProvider>

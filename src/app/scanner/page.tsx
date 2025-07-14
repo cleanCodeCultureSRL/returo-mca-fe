@@ -315,7 +315,7 @@ export default function ScannerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="no-scroll-page bg-black overflow-hidden">
       <ThemeColor color="black" />
       {/* Top Disclaimer */}
       <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/80 to-transparent">
@@ -327,7 +327,7 @@ export default function ScannerPage() {
       </div>
 
       {/* Camera View */}
-      <div className="relative w-full h-full min-h-screen">
+      <div className="relative w-full h-full">
         {/* Hidden canvas for capturing */}
         <canvas
           ref={canvasRef}

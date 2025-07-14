@@ -52,6 +52,74 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* Prevent overscroll behavior on iOS PWA */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  /* Prevent pull-to-refresh */
+  overflow-x: hidden;
+}
+
+/* iOS PWA specific fixes */
+html {
+  /* Prevent overscroll behavior */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  /* Fix for iOS PWA viewport */
+  height: 100%;
+  overflow: hidden;
+}
+
+/* PWA container fix for iOS */
+.pwa-container {
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for better mobile support */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  position: relative;
+  /* Enable smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent bounce scrolling on iOS */
+  -webkit-transform: translateZ(0);
+}
+
+/* iOS Safari PWA specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .ios-pwa-fix {
+    /* Prevent overscroll on iOS PWA */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+    /* Prevent pull-to-refresh */
+    touch-action: pan-y;
+  }
+}
+
+/* For pages that should not scroll at all */
+.no-scroll-page {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Prevent any scrolling or bouncing */
+  touch-action: none;
+  -webkit-overflow-scrolling: auto;
 }
 
 /* Euclid Circular A Font */
