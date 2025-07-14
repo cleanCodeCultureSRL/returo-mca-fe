@@ -134,6 +134,16 @@ const getDefaultAccounts = (): User[] => {
       dateJoined: "2024-01-01T00:00:00.000Z",
       isVerified: true,
     },
+    {
+      id: "default_8",
+      email: "user@mail.com",
+      firstName: "User",
+      lastName: "User",
+      phone: "0700000007",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
   ];
 };
 
