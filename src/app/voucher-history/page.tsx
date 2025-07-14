@@ -288,7 +288,7 @@ export default function VoucherHistoryPage() {
 
       {/* Fixed Header */}
       <div className="fixed top-0 left-0 right-0 z-40" style={{ backgroundColor: primary.lightGreen }}>
-        <Header showTitle={true} title="Arhiva vouchere" />
+        <Header showTitle={true} title="Arhivă vouchere" />
       </div>
 
       {/* Fixed Filter Tabs */}

@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import ThemeColor from '../components/ThemeColor';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginUser, clearError } from '../../store/slices/authSlice';
-import DebugStorage from '../components/DebugStorage';
 import ErrorModal from '../components/ErrorModal';
 
 export default function LoginPage() {
