@@ -61,24 +61,103 @@ const loadUsersFromStorage = (): User[] => {
   return [];
 };
 
+// Default accounts available on fresh start - no localStorage required
+const getDefaultAccounts = (): User[] => {
+  return [
+    {
+      id: "default_1",
+      email: "ioana.ciobotariu@returosgr.ro",
+      firstName: "Ioana",
+      lastName: "Ciobotariu",
+      phone: "0700000001",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
+    {
+      id: "default_2",
+      email: "madalina.delivan@returosgr.ro",
+      firstName: "Madalina",
+      lastName: "Delivan",
+      phone: "0700000002",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
+    {
+      id: "default_3",
+      email: "adrian.topa@returosgr.ro",
+      firstName: "Adrian",
+      lastName: "Topa",
+      phone: "0700000003",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
+    {
+      id: "default_4",
+      email: "cristian.tudoran@returosgr.ro",
+      firstName: "Cristian",
+      lastName: "Tudoran",
+      phone: "0700000004",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
+    {
+      id: "default_5",
+      email: "angel.luca@returosgr.ro",
+      firstName: "Angel",
+      lastName: "Luca",
+      phone: "0700000005",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
+    {
+      id: "default_6",
+      email: "alexandru.mihalache@returosgr.ro",
+      firstName: "Alexandru",
+      lastName: "Mihalache",
+      phone: "0700000006",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
+    {
+      id: "default_7",
+      email: "andrei.pata@cleancodeculture.com",
+      firstName: "Andrei",
+      lastName: "Pata",
+      phone: "0700000007",
+      avatar: "/illustrations/persona_illustration.png",
+      dateJoined: "2024-01-01T00:00:00.000Z",
+      isVerified: true,
+    },
+  ];
+};
+
 // Async thunks
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (
-    { email }: { email: string; password: string },
+    { email, password }: { email: string; password: string },
     { rejectWithValue }
   ) => {
     try {
       // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const users = loadUsersFromStorage();
+      // Check both localStorage users and default accounts
+      const localStorageUsers = loadUsersFromStorage();
+      const defaultAccounts = getDefaultAccounts();
+      const allUsers = [...localStorageUsers, ...defaultAccounts];
 
       // Debug logging
-      console.log("All users in storage:", users);
+      console.log("All users (localStorage + defaults):", allUsers);
       console.log("Looking for email:", email);
 
-      const user = users.find((u) => u.email === email);
+      const user = allUsers.find((u) => u.email === email);
 
       if (!user) {
         return rejectWithValue(
@@ -86,7 +165,15 @@ export const loginUser = createAsyncThunk(
         );
       }
 
-      // For demo purposes, any password works if user exists
+      // Check password for default accounts
+      const isDefaultAccount = defaultAccounts.some((u) => u.email === email);
+      if (isDefaultAccount && password !== "password") {
+        return rejectWithValue(
+          "Parolă incorectă. Pentru conturile default, folosește parola 'password'."
+        );
+      }
+
+      // For localStorage users, any password works (demo mode)
       // In real app, you'd validate password hash
 
       const token = `token_${Date.now()}_${Math.random()
