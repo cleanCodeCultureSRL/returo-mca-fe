@@ -23,6 +23,10 @@ export default function VoucherHistoryPage() {
   const [selectedFilter, setSelectedFilter] = useState<'disponibile' | 'utilizate' | 'expirate'>('disponibile');
   const [selectedRetailer, setSelectedRetailer] = useState<string | null>(null);
   const [showRetailerModal, setShowRetailerModal] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [beneficiaryName, setBeneficiaryName] = useState('');
+  const [beneficiaryIban, setBeneficiaryIban] = useState('');
 
   const handleBack = () => {
     router.back();
@@ -38,10 +42,36 @@ export default function VoucherHistoryPage() {
     setSelectedVoucher(null);
   };
 
-  const handleUseVoucher = () => {
-    // Handle voucher usage logic here
-    console.log('Using voucher:', selectedVoucher);
-    handleCloseModal();
+  const handleCashOut = () => {
+    // Open transfer modal for cash out
+    setShowModal(false);
+    setIsTransferModalOpen(true);
+  };
+
+  const handleCloseTransferModal = () => {
+    setIsTransferModalOpen(false);
+    setBeneficiaryName('');
+    setBeneficiaryIban('');
+  };
+
+  const handleTransfer = () => {
+    // Handle transfer logic here
+    console.log('Cash out transfer:', {
+      voucher: selectedVoucher,
+      beneficiaryName,
+      beneficiaryIban,
+      amount: selectedVoucher?.amount
+    });
+    setIsTransferModalOpen(false);
+    setIsSuccessModalOpen(true);
+  };
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setSelectedVoucher(null);
+    // Reset form fields
+    setBeneficiaryName('');
+    setBeneficiaryIban('');
   };
 
   const vouchers = [
@@ -452,10 +482,10 @@ export default function VoucherHistoryPage() {
                 </svg>
               </button>
               <button
-                onClick={handleUseVoucher}
+                onClick={handleCashOut}
                 className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
               >
-                Utilizeaza
+                Cash out
               </button>
             </div>
           </div>
@@ -510,6 +540,87 @@ export default function VoucherHistoryPage() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Transfer Modal */}
+      {isTransferModalOpen && selectedVoucher && (
+        <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
+          <div className="bg-black rounded-t-3xl w-full max-w-md p-6 animate-slide-up pointer-events-auto">
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-white text-xl font-euclid-semibold">Cash out voucher</h3>
+                <span className="text-white text-sm font-euclid-regular">Suma: <span className="font-euclid-bold">{selectedVoucher.amount}</span></span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-white text-xl font-euclid-semibold mb-4">Nume beneficiar</h3>
+              <input
+                type="text"
+                placeholder="Nume si prenume"
+                value={beneficiaryName}
+                onChange={(e) => setBeneficiaryName(e.target.value)}
+                className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
+              />
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-white text-xl font-euclid-semibold mb-4">IBAN beneficiar</h3>
+              <input
+                type="text"
+                placeholder="IBAN"
+                value={beneficiaryIban}
+                onChange={(e) => setBeneficiaryIban(e.target.value)}
+                className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
+              />
+            </div>
+
+            <div className="flex items-center justify-between mt-8">
+              <button
+                onClick={handleCloseTransferModal}
+                className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors touchable-opacity"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-black">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+
+              <button
+                onClick={handleTransfer}
+                className="flex-1 ml-4 bg-white text-black py-4 rounded-full font-euclid-bold text-lg hover:bg-gray-100 transition-colors touchable-opacity"
+              >
+                Cash out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {isSuccessModalOpen && selectedVoucher && (
+        <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
+          <div className="bg-black rounded-t-3xl w-full max-w-md p-8 pointer-events-auto text-center">
+            <div className="mb-8">
+              <Image
+                src="/illustrations/transfer_succedded_illustration.png"
+                alt="Transfer Success"
+                width={120}
+                height={120}
+                className="mx-auto mb-6"
+              />
+              <p className="text-white text-lg font-euclid-regular leading-relaxed">
+                Cash out pentru {selectedVoucher.amount} a fost efectuat cu succes
+              </p>
+            </div>
+
+            <button
+              onClick={handleCloseSuccessModal}
+              className="w-full bg-white text-black py-4 rounded-full font-euclid-bold text-lg hover:bg-gray-100 transition-colors touchable-opacity"
+            >
+              Închide
+            </button>
           </div>
         </div>
       )}
