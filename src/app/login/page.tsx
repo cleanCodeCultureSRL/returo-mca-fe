@@ -101,14 +101,14 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleInputChange}
               placeholder="exemplu@mail.com"
-              className="w-full px-4 py-3 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green "
+              className="w-full px-4 py-3 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green max-h-[667px]:py-2"
               required
             />
           </div>
 
           {/* Password Field */}
-          <div className="mb-6">
-            <label className="block text-black font-medium mb-2 font-euclid-regular">Parola</label>
+          <div className="mb-6 max-h-[667px]:mb-4">
+            <label className="block text-black font-medium mb-2 font-euclid-regular max-h-[667px]:mb-1">Parola</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -116,7 +116,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Parola"
-                className="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
+                className="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green max-h-[667px]:py-2"
                 required
               />
               <button
@@ -141,7 +141,7 @@ export default function LoginPage() {
           </div>
 
           {/* Forgot Password */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 max-h-[667px]:mb-4">
             <button
               onClick={handleForgotPassword}
               className="text-primary-green font-medium hover:underline font-euclid-bold touchable-opacity"
@@ -151,15 +151,15 @@ export default function LoginPage() {
           </div>
 
           {/* Social Login */}
-          <div className="text-center mb-6">
-            <p className="text-black font-medium mb-4 font-euclid-semibold">sau înregistrează-te cu</p>
+          <div className="text-center mb-6 max-h-[667px]:mb-4">
+            <p className="text-black font-medium mb-4 font-euclid-semibold max-h-[667px]:mb-2">sau înregistrează-te cu</p>
             <div className="flex justify-center space-x-4">
               {/* Google */}
               <button
                 onClick={() => handleSocialLogin('google')}
-                className="w-16 h-16 rounded-3xl flex items-center justify-center hover:bg-yellow-500 transition-colors shadow-lg touchable-opacity"
+                className="w-16 h-16 rounded-3xl flex items-center justify-center hover:bg-yellow-500 transition-colors shadow-lg touchable-opacity max-h-[667px]:w-12 max-h-[667px]:h-12"
               >
-                <svg viewBox="0 0 24 24" className="w-8 h-8">
+                <svg viewBox="0 0 24 24" className="w-8 h-8 max-h-[667px]:w-6 max-h-[667px]:h-6">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
@@ -170,9 +170,9 @@ export default function LoginPage() {
               {/* Apple */}
               <button
                 onClick={() => handleSocialLogin('apple')}
-                className="w-16 h-16 bg-black rounded-3xl flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
+                className="w-16 h-16 bg-black rounded-3xl flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity max-h-[667px]:w-12 max-h-[667px]:h-12"
               >
-                <svg viewBox="0 0 24 24" className="w-8 h-8">
+                <svg viewBox="0 0 24 24" className="w-8 h-8 max-h-[667px]:w-6 max-h-[667px]:h-6">
                   <path fill="white" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
                 </svg>
               </button>
@@ -184,9 +184,9 @@ export default function LoginPage() {
       </div>
 
       {/* Login Button - Fixed at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 px-6 py-6 z-30">
+      <div className="absolute bottom-0 left-0 right-0 px-6 py-6 z-30 max-h-[667px]:py-4">
         {/* Register Link */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-4 max-h-[667px]:mb-2">
           <button
             onClick={handleRegister}
             className="text-black font-bold hover:underline font-euclid-bold touchable-opacity"
@@ -197,7 +197,7 @@ export default function LoginPage() {
         <button
           onClick={handleLogin}
           disabled={isLoading || !formData.email || !formData.password}
-          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors touchable-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors touchable-opacity disabled:opacity-50 disabled:cursor-not-allowed max-h-[667px]:py-3 max-h-[667px]:text-base"
         >
           {isLoading ? 'Se încarcă...' : 'Login'}
         </button>
