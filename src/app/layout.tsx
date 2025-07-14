@@ -78,7 +78,7 @@ export default function RootLayout({
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${inter.className} bg-gray-50`} style={{ height: '100vh', height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
+      <body className={`${inter.className} bg-gray-50`} style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
         <ReduxProvider>
           <AuthStatus />
           <div className="max-w-md mx-auto bg-white pwa-container">

@@ -548,48 +548,96 @@ export default function VoucherHistoryPage() {
       {isTransferModalOpen && selectedVoucher && (
         <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
           <div className="bg-black rounded-t-3xl w-full max-w-md p-6 animate-slide-up pointer-events-auto">
-            <div className="mb-6">
+            {/* Header - matches voucher modal header spacing */}
+            <div className="mb-8">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-white text-xl font-euclid-semibold">Cash out voucher</h3>
-                <span className="text-white text-sm font-euclid-regular">Suma: <span className="font-euclid-bold">{selectedVoucher.amount}</span></span>
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/icons/transfer_icon_white.png"
+                    alt="Transfer"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-lg font-bold text-white">Cash out voucher</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Image
+                    src="/icons/wallet_icon.png"
+                    alt="Wallet"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4 filter brightness-0 invert"
+                  />
+                  <span className="text-lg font-bold text-white">{selectedVoucher.retailer}</span>
+                </div>
+              </div>
+
+              {/* Amount Display - matches voucher amount section */}
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white">{selectedVoucher.amount}</div>
+                <div className="text-sm text-gray-300 mt-1">Suma pentru transfer</div>
               </div>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-white text-xl font-euclid-semibold mb-4">Nume beneficiar</h3>
-              <input
-                type="text"
-                placeholder="Nume si prenume"
-                value={beneficiaryName}
-                onChange={(e) => setBeneficiaryName(e.target.value)}
-                className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
-              />
+            {/* Form Fields Section - matches barcode section height */}
+            <div className="mb-8">
+              <div className="mb-6">
+                <h3 className="text-white text-xl font-euclid-semibold mb-4">Nume beneficiar</h3>
+                <input
+                  type="text"
+                  placeholder="Nume si prenume"
+                  value={beneficiaryName}
+                  onChange={(e) => setBeneficiaryName(e.target.value)}
+                  className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
+                />
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-white text-xl font-euclid-semibold mb-4">IBAN beneficiar</h3>
+                <input
+                  type="text"
+                  placeholder="IBAN"
+                  value={beneficiaryIban}
+                  onChange={(e) => setBeneficiaryIban(e.target.value)}
+                  className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
+                />
+              </div>
+
+              {/* Visual element to match barcode space */}
+              <div className="flex justify-center">
+                <div className="bg-white/10 p-4 rounded-lg border border-white/20">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Image
+                      src="/icons/transfer_icon_white.png"
+                      alt="Transfer"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
+                    <span className="text-white text-lg font-euclid-semibold">Transfer bancar</span>
+                  </div>
+                  <div className="text-center text-sm text-gray-300">
+                    Transferul va fi procesat instant
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-white text-xl font-euclid-semibold mb-4">IBAN beneficiar</h3>
-              <input
-                type="text"
-                placeholder="IBAN"
-                value={beneficiaryIban}
-                onChange={(e) => setBeneficiaryIban(e.target.value)}
-                className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
-              />
-            </div>
-
-            <div className="flex items-center justify-between mt-8">
+            {/* Action Buttons - matches voucher modal buttons */}
+            <div className="flex items-center space-x-4">
               <button
                 onClick={handleCloseTransferModal}
-                className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors touchable-opacity"
+                className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg touchable-opacity"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-black">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <path d="m15 18-6-6 6-6" />
                 </svg>
               </button>
 
               <button
                 onClick={handleTransfer}
-                className="flex-1 ml-4 bg-white text-black py-4 rounded-full font-euclid-bold text-lg hover:bg-gray-100 transition-colors touchable-opacity"
+                className="flex-1 bg-white text-black py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors touchable-opacity"
               >
                 Cash out
               </button>

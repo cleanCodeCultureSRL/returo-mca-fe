@@ -11,12 +11,15 @@ export default function ScannerPage() {
   const [error, setError] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [cameraStarted, setCameraStarted] = useState(false);
-  const [showStartButton, setShowStartButton] = useState(true);
+  const [showStartButton, setShowStartButton] = useState(false);
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // Automatically start the camera when component mounts
+    startCamera();
+
     return () => {
       stopCamera();
     };
@@ -228,8 +231,8 @@ export default function ScannerPage() {
   };
 
   const handleBack = () => {
+    stopCamera();
     router.push('/home');
-
   };
 
   const handleCapture = () => {
@@ -261,10 +264,7 @@ export default function ScannerPage() {
     setShowSuccessModal(true);
   };
 
-  const handleGallery = () => {
-    // TODO: Implement gallery selection
-    console.log('Gallery button pressed');
-  };
+
 
   const handleViewArchive = () => {
     router.push('/voucher-history');
@@ -394,7 +394,7 @@ export default function ScannerPage() {
 
         {/* Barcode Scanning Rectangle - only show when camera is started and no image captured */}
         {cameraStarted && !capturedImage && (
-          <div className="absolute inset-0 flex items-center justify-center z-30" style={{ transform: 'translateY(-10%)' }}>
+          <div className="absolute inset-0 flex items-center justify-center z-30">
             <div className="relative">
               {/* Yellow Rectangle Border */}
               <div className="w-80 h-48 border-4 border-yellow-400 rounded-lg relative">
@@ -419,11 +419,11 @@ export default function ScannerPage() {
         )}
 
         {/* Video status indicator for debugging */}
-        {cameraStarted && !capturedImage && (
+        {/* {cameraStarted && !capturedImage && (
           <div className="absolute top-4 right-4 z-40 bg-green-500 text-white px-3 py-2 rounded-full text-xs font-euclid-semibold">
             Camera activă
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Success Modal */}
@@ -477,36 +477,26 @@ export default function ScannerPage() {
 
       {/* Bottom Navigation - hide when modal is shown */}
       {!showSuccessModal && (
-        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-between px-6 z-30">
+        <div className="absolute bottom-8 left-0 right-0 px-6 z-30">
           {/* Back Button */}
           <button
             onClick={handleBack}
-            className="w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg touchable-opacity"
+            className="absolute left-6 w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg touchable-opacity"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
 
-          {/* Scan/Capture Button */}
-          <button
-            onClick={handleCapture}
-            className="w-20 h-20 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg border-4 border-white touchable-opacity"
-          >
-            <div className="w-16 h-16 bg-transparent border-2 border-black rounded-full"></div>
-          </button>
-
-          {/* Gallery Button */}
-          <button
-            onClick={handleGallery}
-            className="w-16 h-16 bg-white/90 text-black rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg touchable-opacity"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-              <circle cx="9" cy="9" r="2" />
-              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-            </svg>
-          </button>
+          {/* Scan/Capture Button - Centered */}
+          <div className="flex justify-center">
+            <button
+              onClick={handleCapture}
+              className="w-20 h-20 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg border-4 border-white touchable-opacity"
+            >
+              <div className="w-16 h-16 bg-transparent border-2 border-black rounded-full"></div>
+            </button>
+          </div>
         </div>
       )}
     </div>
