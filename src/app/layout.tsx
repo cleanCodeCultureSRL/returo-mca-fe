@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ReduxProvider from "../store/ReduxProvider";
+import AuthStatus from "./components/AuthStatus";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -77,9 +79,12 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${inter.className} min-h-screen bg-gray-50 overscroll-none`}>
-        <div className="max-w-md mx-auto bg-white min-h-screen relative">
-          {children}
-        </div>
+        <ReduxProvider>
+          <AuthStatus />
+          <div className="max-w-md mx-auto bg-white min-h-screen relative">
+            {children}
+          </div>
+        </ReduxProvider>
       </body>
     </html>
   );

@@ -25,7 +25,7 @@ export default function TransferPage() {
   const [amount, setAmount] = useState('');
 
   const handleBack = () => {
-    router.push('/home');
+    router.push('/wallet');
   };
 
   const handleOpenModal = () => {
@@ -56,7 +56,7 @@ export default function TransferPage() {
       id: '1',
       iban: 'RO49AAAA1B31007593840000',
       date: '04 Iun 2024',
-      amount: '200 RON',
+      amount: '89,5 RON',
       groupDate: '04 Iun • Joi',
       isNewDay: true
     },
@@ -64,35 +64,36 @@ export default function TransferPage() {
       id: '2',
       iban: 'RO12BRDE445SV08468980000',
       date: '04 Iun 2024',
-      amount: '240 RON',
+      amount: '126 RON',
       groupDate: '04 Iun • Joi'
     },
     {
       id: '3',
       iban: 'RO36BTRL01304205F73F0000',
       date: '04 Iun 2024',
-      amount: '150 RON',
+      amount: '67,5 RON',
       groupDate: '04 Iun • Joi'
     },
     {
       id: '4',
       iban: 'RO49AAAA1B31007593840000',
-      date: '04 Iun 2024',
-      amount: '200 RON',
-      groupDate: '04 Iun • Joi'
+      date: '03 Iun 2024',
+      amount: '42,5 RON',
+      groupDate: '03 Iun • Luni',
+      isNewDay: true
     },
     {
       id: '5',
       iban: 'RO12BRDE445SV08468980000',
-      date: '04 Iun 2024',
-      amount: '240 RON',
-      groupDate: '04 Iun • Joi'
+      date: '03 Iun 2024',
+      amount: '203,5 RON',
+      groupDate: '03 Iun • Luni'
     },
     {
       id: '6',
       iban: 'RO36BTRL01304205F73F0000',
       date: '11 Mai 2024',
-      amount: '150 RON',
+      amount: '78,5 RON',
       groupDate: '11 Mai • Duminica',
       isNewDay: true
     },
@@ -100,29 +101,67 @@ export default function TransferPage() {
       id: '7',
       iban: 'RO49AAAA1B31007593840000',
       date: '11 Mai 2024',
-      amount: '200 RON',
+      amount: '34,5 RON',
       groupDate: '11 Mai • Duminica'
     },
     {
       id: '8',
       iban: 'RO12BRDE445SV08468980000',
       date: '11 Mai 2024',
-      amount: '240 RON',
+      amount: '92 RON',
       groupDate: '11 Mai • Duminica'
     },
     {
       id: '9',
       iban: 'RO36BTRL01304205F73F0000',
-      date: '11 Mai 2024',
-      amount: '150 RON',
-      groupDate: '11 Mai • Duminica'
+      date: '10 Mai 2024',
+      amount: '56,5 RON',
+      groupDate: '10 Mai • Vineri',
+      isNewDay: true
     },
     {
       id: '10',
       iban: 'RO49AAAA1B31007593840000',
-      date: '11 Mai 2024',
-      amount: '200 RON',
-      groupDate: '11 Mai • Duminica'
+      date: '10 Mai 2024',
+      amount: '129 RON',
+      groupDate: '10 Mai • Vineri'
+    },
+    {
+      id: '11',
+      iban: 'RO45CECE123456789012000',
+      date: '29 Apr 2024',
+      amount: '45,5 RON',
+      groupDate: '29 Apr • Luni',
+      isNewDay: true
+    },
+    {
+      id: '12',
+      iban: 'RO78RZBR987654321098700',
+      date: '29 Apr 2024',
+      amount: '76,5 RON',
+      groupDate: '29 Apr • Luni'
+    },
+    {
+      id: '13',
+      iban: 'RO23INGB112233445566700',
+      date: '29 Apr 2024',
+      amount: '30 RON',
+      groupDate: '29 Apr • Luni'
+    },
+    {
+      id: '14',
+      iban: 'RO56TREZ554433221100900',
+      date: '15 Apr 2024',
+      amount: '134,5 RON',
+      groupDate: '15 Apr • Luni',
+      isNewDay: true
+    },
+    {
+      id: '15',
+      iban: 'RO89BREL776655443322100',
+      date: '15 Apr 2024',
+      amount: '87,5 RON',
+      groupDate: '15 Apr • Luni'
     }
   ];
 
@@ -131,7 +170,7 @@ export default function TransferPage() {
       <ThemeColor color="#D2ECDE" />
 
       {/* Fixed Header */}
-      <Header showTitle={true} title="Tranfera" />
+      <Header showTitle={true} title="Transferă" />
 
 
       {/* Fixed Balance Card */}
@@ -148,7 +187,7 @@ export default function TransferPage() {
               height={24}
               className="w-[24px] h-[18px] mr-3"
             />
-            <div className="text-white text-4xl font-azo-bold">345,5 <span className="text-2xl">Ron</span></div>
+            <div className="text-white text-4xl font-azo-bold">265,5 <span className="text-2xl">Ron</span></div>
           </div></div>
       </div>
 
@@ -254,8 +293,8 @@ export default function TransferPage() {
 
             <div className="mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-white text-xl font-euclid-semibold">Cat vrei sa donezi?</h3>
-                <span className="text-white text-sm font-euclid-regular">Sold: <span className="font-euclid-bold">345,5</span> Ron</span>
+                <h3 className="text-white text-xl font-euclid-semibold">Cât vrei sa transferi?</h3>
+                <span className="text-white text-sm font-euclid-regular">Sold: <span className="font-euclid-bold">265,5</span> Ron</span>
               </div>
               <div className="relative">
                 <input

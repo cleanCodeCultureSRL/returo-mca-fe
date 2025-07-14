@@ -21,9 +21,11 @@ export default function VoucherHistoryPage() {
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<'disponibile' | 'utilizate' | 'expirate'>('disponibile');
+  const [selectedRetailer, setSelectedRetailer] = useState<string | null>(null);
+  const [showRetailerModal, setShowRetailerModal] = useState(false);
 
   const handleBack = () => {
-    router.push('/home');
+    router.back();
   };
 
   const handleVoucherSelect = (voucher: Voucher) => {
@@ -113,12 +115,171 @@ export default function VoucherHistoryPage() {
       retailer: 'Profi',
       status: 'expirate' as const
     },
+    {
+      receiptNumber: '00078345',
+      date: '12/06/2025 11:45:33',
+      amount: '89,5 RON',
+      retailer: 'Lidl',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00123456',
+      date: '11/06/2025 16:22:18',
+      amount: '126 RON',
+      retailer: 'Metro',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00245678',
+      date: '10/06/2025 08:15:45',
+      amount: '67,5 RON',
+      retailer: 'Selgros',
+      status: 'utilizate' as const
+    },
+    {
+      receiptNumber: '00567890',
+      date: '09/06/2025 19:30:12',
+      amount: '42,5 RON',
+      retailer: 'Cora',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00789012',
+      date: '08/06/2025 12:08:27',
+      amount: '16 RON',
+      retailer: 'Penny Market',
+      status: 'expirate' as const
+    },
+    {
+      receiptNumber: '00345123',
+      date: '07/06/2025 14:55:41',
+      amount: '203,5 RON',
+      retailer: 'Auchan',
+      status: 'utilizate' as const
+    },
+    {
+      receiptNumber: '00456789',
+      date: '06/06/2025 10:12:09',
+      amount: '78,5 RON',
+      retailer: 'Kaufland',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00678901',
+      date: '05/06/2025 17:43:56',
+      amount: '34,5 RON',
+      retailer: 'Profi',
+      status: 'expirate' as const
+    },
+    {
+      receiptNumber: '00890123',
+      date: '04/06/2025 13:27:33',
+      amount: '92 RON',
+      retailer: 'Carrefour',
+      status: 'utilizate' as const
+    },
+    {
+      receiptNumber: '00901234',
+      date: '03/06/2025 09:38:14',
+      amount: '56,5 RON',
+      retailer: 'Mega Image',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00234567',
+      date: '02/06/2025 15:19:52',
+      amount: '129 RON',
+      retailer: 'Lidl',
+      status: 'expirate' as const
+    },
+    {
+      receiptNumber: '00112233',
+      date: '01/06/2025 11:06:38',
+      amount: '45,5 RON',
+      retailer: 'Metro',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00334455',
+      date: '31/05/2025 18:24:15',
+      amount: '76,5 RON',
+      retailer: 'Selgros',
+      status: 'utilizate' as const
+    },
+    {
+      receiptNumber: '00556677',
+      date: '30/05/2025 12:41:29',
+      amount: '30 RON',
+      retailer: 'Cora',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00778899',
+      date: '29/05/2025 16:58:07',
+      amount: '134,5 RON',
+      retailer: 'Auchan',
+      status: 'expirate' as const
+    },
+    {
+      receiptNumber: '00998877',
+      date: '28/05/2025 14:33:44',
+      amount: '87,5 RON',
+      retailer: 'Penny Market',
+      status: 'utilizate' as const
+    },
+    {
+      receiptNumber: '00665544',
+      date: '27/05/2025 10:17:21',
+      amount: '53 RON',
+      retailer: 'Kaufland',
+      status: 'disponibile' as const
+    },
+    {
+      receiptNumber: '00443322',
+      date: '26/05/2025 13:49:36',
+      amount: '19,5 RON',
+      retailer: 'Profi',
+      status: 'expirate' as const
+    },
+    {
+      receiptNumber: '00221100',
+      date: '25/05/2025 08:25:53',
+      amount: '166 RON',
+      retailer: 'Metro',
+      status: 'utilizate' as const
+    },
+    {
+      receiptNumber: '00147258',
+      date: '24/05/2025 19:02:18',
+      amount: '74 RON',
+      retailer: 'Carrefour',
+      status: 'disponibile' as const
+    },
   ];
 
-  const filteredVouchers = vouchers.filter(voucher => voucher.status === selectedFilter);
+  const filteredVouchers = vouchers.filter(voucher => {
+    const matchesStatus = voucher.status === selectedFilter;
+    const matchesRetailer = selectedRetailer ? voucher.retailer === selectedRetailer : true;
+    return matchesStatus && matchesRetailer;
+  });
 
   const handleFilterChange = (filter: 'disponibile' | 'utilizate' | 'expirate') => {
     setSelectedFilter(filter);
+  };
+
+  const retailers = [
+    'Auchan', 'Metro', 'Selgros', 'Carrefour', 'Lidl', 'Mega Image', 'Kaufland',
+    'Profi', 'Cora', 'Penny Market', 'La Cocos', 'Dedeman', 'Altex', 'eMAG'
+  ];
+
+  const handleRetailerSelect = (retailer: string) => {
+    setSelectedRetailer(retailer);
+    setShowRetailerModal(false);
+  };
+
+  const handleClearRetailerFilter = () => {
+    setSelectedRetailer(null);
+    setShowRetailerModal(false);
   };
 
   return (
@@ -155,6 +316,20 @@ export default function VoucherHistoryPage() {
           style={{ backgroundColor: selectedFilter === 'expirate' ? primary.green : undefined }}
         >
           Expirate
+        </button>
+        <button
+          onClick={() => setShowRetailerModal(true)}
+          className={`text-black px-3 py-3 rounded-2xl text-base font-euclid-semibold touchable-opacity ${selectedRetailer ? '' : 'bg-white'
+            }`}
+          style={{ backgroundColor: selectedRetailer ? primary.green : undefined }}
+        >
+          <Image
+            src="/icons/filter_icon.png"
+            alt="Filter"
+            width={20}
+            height={20}
+            className="w-5 h-5"
+          />
         </button>
       </div>
 
@@ -282,6 +457,58 @@ export default function VoucherHistoryPage() {
               >
                 Utilizeaza
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Retailer Filter Modal */}
+      {showRetailerModal && (
+        <div
+          className="fixed top-0 left-0 right-0 bottom-0 flex items-end justify-center z-50"
+          onClick={() => setShowRetailerModal(false)}
+        >
+          <div
+            className="bg-white rounded-t-4xl w-full mb-0 animate-slide-up shadow-2xl border-3 border-black flex flex-col"
+            style={{ height: '60vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Fixed Header */}
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-black">Selectează retailer</h2>
+                <button
+                  onClick={() => setShowRetailerModal(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {selectedRetailer && (
+                <button
+                  onClick={handleClearRetailerFilter}
+                  className="w-full bg-red-500 text-white py-3 rounded-2xl text-base font-euclid-semibold touchable-opacity"
+                >
+                  Șterge filtru retailer
+                </button>
+              )}
+            </div>
+
+            {/* Scrollable Retailer List */}
+            <div className="flex-1 overflow-y-auto p-6 pt-4">
+              <div className="space-y-2">
+                {retailers.map((retailer) => (
+                  <button
+                    key={retailer}
+                    onClick={() => handleRetailerSelect(retailer)}
+                    className={`w-full text-left py-3 px-4 rounded-2xl text-base font-euclid-semibold touchable-opacity ${selectedRetailer === retailer ? 'bg-green-500 text-white' : 'bg-gray-100 text-black hover:bg-gray-200'
+                      }`}
+                  >
+                    {retailer}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>

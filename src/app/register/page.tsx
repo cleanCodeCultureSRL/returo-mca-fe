@@ -2,18 +2,113 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ThemeColor from '../components/ThemeColor';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { registerUser, clearError } from '../../store/slices/authSlice';
+import ErrorModal from '../components/ErrorModal';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isLoading, error, isAuthenticated } = useAppSelector(state => state.auth);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const handleRegister = () => {
-    // Navigate to main app
-    router.push('/');
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+
+    if (!formData.fullName.trim()) {
+      errors.fullName = 'Numele complet este obligatoriu';
+    } else if (formData.fullName.trim().split(' ').length < 2) {
+      errors.fullName = 'Introduceți prenumele și numele';
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email-ul este obligatoriu';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Email-ul nu este valid';
+    }
+
+    if (!formData.password) {
+      errors.password = 'Parola este obligatorie';
+    } else if (formData.password.length < 6) {
+      errors.password = 'Parola trebuie să aibă minim 6 caractere';
+    }
+
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Confirmarea parolei este obligatorie';
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Parolele nu se potrivesc';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      // Parse full name into first and last name
+      const nameParts = formData.fullName.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || firstName; // Use firstName as lastName if only one name provided
+
+      await dispatch(registerUser({
+        email: formData.email,
+        password: formData.password,
+        firstName: firstName,
+        lastName: lastName,
+        phone: '0700000000', // Default placeholder phone
+      })).unwrap();
+
+      router.push('/home');
+    } catch (error) {
+      // Error is handled by Redux state
+      console.error('Registration error:', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    // Clear validation error for this field
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+
+    // Clear Redux error when user starts typing
+    if (error) {
+      dispatch(clearError());
+    }
+  };
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/home');
+    }
+  }, [isAuthenticated, router]);
 
   const handleLoginLink = () => {
     // Navigate to login page
@@ -42,14 +137,38 @@ export default function RegisterPage() {
           {/* Title */}
           <h1 className="text-3xl font-bold text-black mb-8 font-euclid-bold">Înregistrare</h1>
 
+          {/* Full Name Field */}
+          <div className="mb-6">
+            <label className="block text-black font-medium mb-2 font-euclid-regular">Nume</label>
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleInputChange}
+              placeholder="Prenume Nume"
+              className="w-full px-4 py-3 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
+              required
+            />
+            {validationErrors.fullName && (
+              <p className="text-red-500 text-sm mt-1">{validationErrors.fullName}</p>
+            )}
+          </div>
+
           {/* Email Field */}
           <div className="mb-6">
             <label className="block text-black font-medium mb-2 font-euclid-regular">E-mail</label>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               placeholder="exemplu@mail.com"
               className="w-full px-4 py-3 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
+              required
             />
+            {validationErrors.email && (
+              <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>
+            )}
           </div>
 
           {/* Password Field */}
@@ -58,8 +177,12 @@ export default function RegisterPage() {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
                 placeholder="Parola"
                 className="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
+                required
               />
               <button
                 type="button"
@@ -80,6 +203,9 @@ export default function RegisterPage() {
                 )}
               </button>
             </div>
+            {validationErrors.password && (
+              <p className="text-red-500 text-sm mt-1">{validationErrors.password}</p>
+            )}
           </div>
 
           {/* Confirm Password Field */}
@@ -88,8 +214,12 @@ export default function RegisterPage() {
             <div className="relative">
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
                 placeholder="Confirmă parola"
                 className="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
+                required
               />
               <button
                 type="button"
@@ -110,15 +240,19 @@ export default function RegisterPage() {
                 )}
               </button>
             </div>
+            {validationErrors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">{validationErrors.confirmPassword}</p>
+            )}
           </div>
 
           {/* Terms and Conditions */}
           <div className="text-center mb-8">
-            <p className="text-black font-medium text-sm font-euclid-regular">
+            <p className="text-black font-medium text-sm font-euclid-regular mb-18">
               Prin înregistrare, ești de acord cu{' '}
               <span className="text-primary-green font-euclid-bold">Termenii și Condițiile noastre</span>
-              {' '}și cu{' '}
-              <span className="text-primary-green font-euclid-bold">Politica de Confidențialitate</span>
+              {/* {' '}și cu{' '} */}
+
+              {/* <span className="text-primary-green font-euclid-bold">Politica de Confidențialitate</span> */}
             </p>
           </div>
 
@@ -139,11 +273,19 @@ export default function RegisterPage() {
         </div>
         <button
           onClick={handleRegister}
-          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors font-euclid-bold touchable-opacity "
+          disabled={isLoading}
+          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors font-euclid-bold touchable-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Înregistrează-te
+          {isLoading ? 'Se încarcă...' : 'Înregistrează-te'}
         </button>
       </div>
+
+      {/* Error Modal */}
+      <ErrorModal
+        isOpen={!!error && error !== 'User not found'}
+        message={error || ''}
+        onClose={() => dispatch(clearError())}
+      />
     </div>
   );
 } 

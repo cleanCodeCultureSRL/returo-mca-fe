@@ -4,18 +4,38 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { yellow } from '../styles/colors';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { logoutUser } from '../../store/slices/authSlice';
 
 interface HeaderProps {
-  userName?: string;
-  balance?: string;
-  currency?: string;
   showTitle?: boolean;
   title?: string;
 }
 
-export default function Header({ userName, balance, currency, showTitle, title }: HeaderProps) {
+export default function Header({ showTitle, title }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  // Get user data from Redux
+  const { user } = useAppSelector(state => state.auth);
+  const { balance } = useAppSelector(state => state.wallet);
+
+  // Extract user name and format balance
+  const userName = user ? user.firstName : 'Utilizator';
+  const formattedBalance = balance ? balance.toFixed(2) : '265.5';
+  const currency = 'RON';
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if logout fails, redirect to login page
+      router.push('/login');
+    }
+  };
 
   const handleMenuItemClick = (label: string) => {
     switch (label) {
@@ -32,7 +52,7 @@ export default function Header({ userName, balance, currency, showTitle, title }
         router.push('/invite-a-friend');
         break;
       case 'Logout':
-        router.push('/login');
+        handleLogout();
         break;
       default:
         // Handle other menu items as needed
@@ -62,7 +82,7 @@ export default function Header({ userName, balance, currency, showTitle, title }
             <h1 className="text-black text-2xl font-azo-bold ml-2">{title}</h1>
           ) : (
             /* Profile Section - Floating Pill */
-            <div className="flex items-center bg-black rounded-4xl h-[62px] flex-1  max-w-md mr-12">
+            <div className="flex items-center bg-black rounded-4xl h-[62px] flex-1  max-w-md mr-16">
               <div className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center border-2 border-black">
                 <Image
                   src="/icons/barcode_scanner_icon.png"
@@ -71,7 +91,7 @@ export default function Header({ userName, balance, currency, showTitle, title }
                   height={40}
                 />
               </div>
-              <div className="flex-1 px-4 py-3">
+              <div className="flex-1 px-2 py-3">
                 <p className="text-white text-sm font-euclid-regular">Soldul tău, <span className="font-euclid-bold">{userName}</span></p>
                 <div className="flex items-center">
                   <Image
@@ -81,7 +101,7 @@ export default function Header({ userName, balance, currency, showTitle, title }
                     height={18}
                     className="w-[18px] h-[14px] mr-1"
                   />
-                  <span className="text-white text-lg font-euclid-bold">{balance}</span>
+                  <span className="text-white text-lg font-euclid-bold">{formattedBalance}</span>
                   <span className="text-white text-sm ml-1 font-euclid-regular">{currency}</span>
                 </div>
               </div>
@@ -91,7 +111,7 @@ export default function Header({ userName, balance, currency, showTitle, title }
           {/* Menu Button - Floating */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="w-[62px]  h-[62px] rounded-full flex items-center justify-center flex-shrink-0 touchable-opacity"
+            className="w-[62px] h-[62px] rounded-full flex items-center justify-center flex-shrink-0 touchable-opacity"
             style={{ backgroundColor: yellow }}
           >
             <Image

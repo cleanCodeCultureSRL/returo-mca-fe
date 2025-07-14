@@ -23,10 +23,10 @@ export default function DonatePage() {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   // Mock account balance
-  const accountBalance = 345.5;
+  const accountBalance = 265.5;
 
   const handleBack = () => {
-    router.push('/home');
+    router.push('/wallet');
   };
 
   const handleViewAll = () => {

@@ -2,17 +2,59 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ThemeColor from '../components/ThemeColor';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { loginUser, clearError } from '../../store/slices/authSlice';
+import DebugStorage from '../components/DebugStorage';
+import ErrorModal from '../components/ErrorModal';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useAppDispatch();
+  const { isLoading, error, isAuthenticated } = useAppSelector(state => state.auth);
 
-  const handleLogin = () => {
-    // Navigate to main app
-    router.push('/home');
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      return;
+    }
+
+    try {
+      await dispatch(loginUser({ email: formData.email, password: formData.password })).unwrap();
+      router.push('/home');
+    } catch (error) {
+      // Error is handled by Redux state
+      console.error('Login error:', error);
+    }
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    // Clear error when user starts typing
+    if (error) {
+      dispatch(clearError());
+    }
+  };
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/home');
+    }
+  }, [isAuthenticated, router]);
 
   const handleForgotPassword = () => {
     // Handle forgot password
@@ -56,8 +98,12 @@ export default function LoginPage() {
             <label className="block text-black font-medium mb-2 font-euclid-regular">E-mail</label>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               placeholder="exemplu@mail.com"
               className="w-full px-4 py-3 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green "
+              required
             />
           </div>
 
@@ -67,8 +113,12 @@ export default function LoginPage() {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
                 placeholder="Parola"
                 className="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
+                required
               />
               <button
                 type="button"
@@ -147,11 +197,22 @@ export default function LoginPage() {
         </div>
         <button
           onClick={handleLogin}
-          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors touchable-opacity"
+          disabled={isLoading || !formData.email || !formData.password}
+          className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors touchable-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Login
+          {isLoading ? 'Se încarcă...' : 'Login'}
         </button>
       </div>
+
+      {/* Debug component for troubleshooting */}
+      {/* <DebugStorage /> */}
+
+      {/* Error Modal */}
+      <ErrorModal
+        isOpen={!!error}
+        message={error || ''}
+        onClose={() => dispatch(clearError())}
+      />
     </div>
   );
 } 

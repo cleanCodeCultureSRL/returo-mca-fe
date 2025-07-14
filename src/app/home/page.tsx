@@ -71,10 +71,10 @@ export default function HomePage() {
     <div className="min-h-screen" style={{ backgroundColor: primary.lightGreen }}>
       <ThemeColor color="#D2ECDE" />
       {/* Header */}
-      <Header userName="Andrei" balance="345,5" currency="Ron" />
+      <Header userName="Andrei" balance="265,5" currency="Ron" />
 
       {/* Main Content */}
-      <div className="px-4 pb-4 space-y-6 mt-4">
+      <div className="px-4 pb-4 space-y-6 mt-1">
         {/* Environmental Impact Card */}
         <div className="bg-black rounded-3xl relative overflow-hidden">
           {/* Green Card - Top Section */}
@@ -150,7 +150,10 @@ export default function HomePage() {
             ))}
 
             {/* Archive Button */}
-            <button className="bg-black rounded-2xl p-6 min-w-[100px] flex-shrink-0 flex items-center justify-between text-white hover:bg-gray-800 transition-colors touchable-opacity">
+            <button
+              onClick={() => router.push('/voucher-history')}
+              className="bg-black rounded-2xl p-6 min-w-[100px] flex-shrink-0 flex items-center justify-between text-white hover:bg-gray-800 transition-colors touchable-opacity"
+            >
               <div>
                 <p className="text-white text-lg font-euclid-regular">Vezi</p>
                 <p className="text-white text-xl font-euclid-bold">Arhiva</p>

@@ -63,7 +63,7 @@ export default function WalletPage() {
               345,5 <span className="text-xl font-azo-regular">Ron</span>
             </div>
 
-            <p className="text-black text-sm font-euclid-semibold">Mai puțin CO₂</p>
+            <p className="text-black text-sm font-euclid-semibold"></p>
           </div>
 
           {/* Bottom Section - Monthly Balance */}
