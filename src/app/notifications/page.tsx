@@ -34,7 +34,7 @@ export default function NotificationsPage() {
     },
     {
       icon: '/icons/provocari_icon.png',
-      title: 'Luni fără plastic? Challenge accepted!',
+      title: 'Zi fără plastic? Challenge accepted!',
       description: 'Scanează primul recipient azi și pornești streak‑ul de 7 zile 🔥',
       iconBg: 'bg-red-500'
     },

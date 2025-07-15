@@ -27,14 +27,27 @@ export default function VoucherHistoryPage() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [beneficiaryName, setBeneficiaryName] = useState('');
   const [beneficiaryIban, setBeneficiaryIban] = useState('');
+  const [isBulkMode, setIsBulkMode] = useState(false);
+  const [selectedVouchers, setSelectedVouchers] = useState<string[]>([]);
+  const [isBulkTransferModalOpen, setIsBulkTransferModalOpen] = useState(false);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleVoucherSelect = (voucher: Voucher) => {
-    setSelectedVoucher(voucher);
-    setShowModal(true);
+    if (isBulkMode) {
+      // Toggle voucher selection in bulk mode
+      setSelectedVouchers(prev =>
+        prev.includes(voucher.receiptNumber)
+          ? prev.filter(id => id !== voucher.receiptNumber)
+          : [...prev, voucher.receiptNumber]
+      );
+    } else {
+      // Normal single voucher selection
+      setSelectedVoucher(voucher);
+      setShowModal(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -43,9 +56,19 @@ export default function VoucherHistoryPage() {
   };
 
   const handleCashOut = () => {
-    // Open transfer modal for cash out
+    // Open transfer modal for single cash out
     setShowModal(false);
     setIsTransferModalOpen(true);
+  };
+
+  const handleBulkCashOut = () => {
+    // Open bulk transfer modal
+    setIsBulkTransferModalOpen(true);
+  };
+
+  const handleToggleBulkMode = () => {
+    setIsBulkMode(!isBulkMode);
+    setSelectedVouchers([]);
   };
 
   const handleCloseTransferModal = () => {
@@ -54,8 +77,14 @@ export default function VoucherHistoryPage() {
     setBeneficiaryIban('');
   };
 
+  const handleCloseBulkTransferModal = () => {
+    setIsBulkTransferModalOpen(false);
+    setBeneficiaryName('');
+    setBeneficiaryIban('');
+  };
+
   const handleTransfer = () => {
-    // Handle transfer logic here
+    // Handle single transfer logic here
     console.log('Cash out transfer:', {
       voucher: selectedVoucher,
       beneficiaryName,
@@ -66,12 +95,40 @@ export default function VoucherHistoryPage() {
     setIsSuccessModalOpen(true);
   };
 
+  const handleBulkTransfer = () => {
+    // Handle bulk transfer logic here
+    const selectedVoucherData = vouchers.filter(v => selectedVouchers.includes(v.receiptNumber));
+    console.log('Bulk cash out transfer:', {
+      vouchers: selectedVoucherData,
+      beneficiaryName,
+      beneficiaryIban,
+      totalAmount: calculateTotalAmount()
+    });
+    setIsBulkTransferModalOpen(false);
+    setIsSuccessModalOpen(true);
+    setIsBulkMode(false);
+    setSelectedVouchers([]);
+  };
+
   const handleCloseSuccessModal = () => {
     setIsSuccessModalOpen(false);
     setSelectedVoucher(null);
     // Reset form fields
     setBeneficiaryName('');
     setBeneficiaryIban('');
+  };
+
+  const calculateTotalAmount = () => {
+    return vouchers
+      .filter(v => selectedVouchers.includes(v.receiptNumber))
+      .reduce((total, voucher) => {
+        const amount = parseFloat(voucher.amount.replace(' RON', '').replace(',', '.'));
+        return total + amount;
+      }, 0);
+  };
+
+  const formatAmount = (amount: number) => {
+    return amount.toFixed(1).replace('.', ',') + ' RON';
   };
 
   const vouchers = [
@@ -295,6 +352,9 @@ export default function VoucherHistoryPage() {
 
   const handleFilterChange = (filter: 'disponibile' | 'utilizate' | 'expirate') => {
     setSelectedFilter(filter);
+    // Exit bulk mode when switching tabs
+    setIsBulkMode(false);
+    setSelectedVouchers([]);
   };
 
   const retailers = [
@@ -363,22 +423,75 @@ export default function VoucherHistoryPage() {
         </button>
       </div>
 
+      {/* Cash out button - only visible on disponibile tab */}
+      {selectedFilter === 'disponibile' && (
+        <div className="fixed top-[168px] left-0 right-0 z-30 px-4 " style={{ backgroundColor: primary.lightGreen }}>
+          <button
+            onClick={handleToggleBulkMode}
+            className={`w-full text-black py-3 rounded-2xl text-base font-euclid-semibold touchable-opacity ${isBulkMode ? 'bg-yellow-400' : 'bg-white'}`}
+          >
+            {isBulkMode ? 'Anulează' : 'Cash out'}
+          </button>
+        </div>
+      )}
+
       {/* Scrollable Voucher History */}
-      <div className="flex-1 overflow-y-auto px-4 pb-24 pt-44">
+      <div className={`flex-1 overflow-y-auto px-4 ${isBulkMode ? 'pb-55' : 'pb-24'} ${selectedFilter === 'disponibile' ? 'pt-56' : 'pt-44'}`}>
         <div className="space-y-4">
           {filteredVouchers.map((voucher, index) => (
-            <div key={index} onClick={() => handleVoucherSelect(voucher)} className="cursor-pointer">
-              <ReceiptCard
-                receiptNumber={voucher.receiptNumber}
-                date={voucher.date}
-                amount={voucher.amount}
-                retailer={voucher.retailer}
-                status={voucher.status}
-              />
+            <div key={index} className="relative">
+              {/* Checkbox for bulk mode */}
+              {isBulkMode && selectedFilter === 'disponibile' && (
+                <div className="absolute top-4 left-4 z-10">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={selectedVouchers.includes(voucher.receiptNumber)}
+                      onChange={() => handleVoucherSelect(voucher)}
+                      className="sr-only"
+                    />
+                    <div
+                      onClick={() => handleVoucherSelect(voucher)}
+                      className={`w-6 h-6 rounded-lg border-2 border-black flex items-center justify-center cursor-pointer transition-colors ${selectedVouchers.includes(voucher.receiptNumber)
+                        ? 'bg-black'
+                        : 'bg-white'
+                        }`}
+                    >
+                      {selectedVouchers.includes(voucher.receiptNumber) && (
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                          <path d="m9 12 2 2 4-4" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div onClick={() => handleVoucherSelect(voucher)} className="cursor-pointer">
+                <ReceiptCard
+                  receiptNumber={voucher.receiptNumber}
+                  date={voucher.date}
+                  amount={voucher.amount}
+                  retailer={voucher.retailer}
+                  status={voucher.status}
+                />
+              </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Floating Bulk Cash Out Button */}
+      {isBulkMode && selectedVouchers.length > 0 && (
+        <div className="fixed bottom-32 left-4 right-4 z-40 px-8">
+          <button
+            onClick={handleBulkCashOut}
+            className="w-full bg-black text-white py-4 rounded-4xl text-lg font-bold hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
+          >
+            Cash out {selectedVouchers.length} {selectedVouchers.length === 1 ? 'voucher' : 'vouchere'} în valoare de {formatAmount(calculateTotalAmount())}
+          </button>
+        </div>
+      )}
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-8 left-0 right-0 flex items-center justify-between px-6 z-50">
@@ -651,6 +764,108 @@ export default function VoucherHistoryPage() {
 
               <button
                 onClick={handleTransfer}
+                className="flex-1 bg-white text-black py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors touchable-opacity"
+              >
+                Cash out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Transfer Modal */}
+      {isBulkTransferModalOpen && (
+        <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
+          <div className="bg-black rounded-t-3xl w-full max-w-md p-6 animate-slide-up pointer-events-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/icons/transfer_icon_white.png"
+                    alt="Transfer"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-lg font-bold text-white">Cash out vouchere</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Image
+                    src="/icons/wallet_icon.png"
+                    alt="Wallet"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4 filter brightness-0 invert"
+                  />
+                  <span className="text-lg font-bold text-white">{selectedVouchers.length} vouchere</span>
+                </div>
+              </div>
+
+              {/* Amount Display */}
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white">{formatAmount(calculateTotalAmount())}</div>
+                <div className="text-sm text-gray-300 mt-1">Suma totală pentru transfer</div>
+              </div>
+            </div>
+
+            {/* Form Fields Section */}
+            <div className="mb-8">
+              <div className="mb-6">
+                <h3 className="text-white text-xl font-euclid-semibold mb-4">Nume beneficiar</h3>
+                <input
+                  type="text"
+                  placeholder="Nume si prenume"
+                  value={beneficiaryName}
+                  onChange={(e) => setBeneficiaryName(e.target.value)}
+                  className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
+                />
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-white text-xl font-euclid-semibold mb-4">IBAN beneficiar</h3>
+                <input
+                  type="text"
+                  placeholder="IBAN"
+                  value={beneficiaryIban}
+                  onChange={(e) => setBeneficiaryIban(e.target.value)}
+                  className="w-full p-4 rounded-2xl border-0 bg-white text-black placeholder-gray-400 font-euclid-regular"
+                />
+              </div>
+
+              {/* Visual element */}
+              <div className="flex justify-center">
+                <div className="bg-white/10 p-4 rounded-lg border border-white/20">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Image
+                      src="/icons/transfer_icon_white.png"
+                      alt="Transfer"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
+                    <span className="text-white text-lg font-euclid-semibold">Transfer bancar</span>
+                  </div>
+                  <div className="text-center text-sm text-gray-300">
+                    Transferul va fi procesat instant
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleCloseBulkTransferModal}
+                className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg touchable-opacity"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+
+              <button
+                onClick={handleBulkTransfer}
                 className="flex-1 bg-white text-black py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors touchable-opacity"
               >
                 Cash out

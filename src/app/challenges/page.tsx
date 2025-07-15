@@ -13,6 +13,12 @@ export default function ChallengesPage() {
     router.push('/home');
   };
 
+  const handleShareChallenge = () => {
+    const message = "🌱 Tocmai am câștigat în Golden League pe Returo! Mă bucur să contribui la un mediu mai curat prin reciclare! 🏆 Alătură-te și tu provocării! #Returo #Reciclare #GoldenLeague #MediuCurat";
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}&quote=${encodeURIComponent(message)}`;
+    window.open(facebookUrl, '_blank', 'width=600,height=400');
+  };
+
   // Leaderboard data
   const leaderboard = [
     { rank: 1, name: 'Maria M.', score: 600, avatar: '/illustrations/persona_illustration.png' },
@@ -226,18 +232,16 @@ export default function ChallengesPage() {
           </svg>
         </button>
 
-        {/* Scan Button */}
+        {/* Share Challenge Button */}
         <button
-          onClick={() => router.push('/scanner')}
+          onClick={handleShareChallenge}
           className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
         >
-          <Image
-            src="/icons/open_camera_icon.png"
-            alt="Scan"
-            width={24}
-            height={24}
-            className="w-6 h-6 filter brightness-0 invert"
-          />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+            <polyline points="16,6 12,2 8,6" />
+            <line x1="12" y1="2" x2="12" y2="15" />
+          </svg>
         </button>
 
         {/* Spacer for symmetry */}
