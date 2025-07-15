@@ -14,7 +14,7 @@ export default function ChallengesPage() {
   };
 
   const handleShareChallenge = () => {
-    const message = "🌱 Tocmai am intrat în Golden League pe Returo! \nMă bucur să contribui la un mediu mai curat prin reciclare! \n\nAlătură-te și tu provocării! \n\n#Returo #Reciclare #GoldenLeague #MediuCurat";
+    const message = "🌱 Tocmai am intrat în Golden League pe RetuRO! \n\nMă bucur să contribui la un mediu mai curat prin reciclare! \n\nAlătură-te și tu provocării! \n\n#Returo #Reciclare #GoldenLeague #MediuCurat";
     const appUrl = window.location.origin;
 
     // Check if we can use the Web Share API (native sharing on mobile)

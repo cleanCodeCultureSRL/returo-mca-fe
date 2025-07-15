@@ -3,15 +3,22 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import ThemeColor from '../components/ThemeColor';
+import { useAppDispatch } from '../../store/hooks';
+import { clearAuth } from '../../store/slices/authSlice';
 
 export default function OnboardingScreen3() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const handleBack = () => {
     router.push('/onboarding_screen_2');
   };
 
   const handleNext = () => {
+    // Clear any existing authentication state
+    dispatch(clearAuth());
+    // Set flag to prevent auto-redirect on login page
+    sessionStorage.setItem('skipAuthRedirect', 'true');
     // Navigate to login page
     router.push('/login');
   };

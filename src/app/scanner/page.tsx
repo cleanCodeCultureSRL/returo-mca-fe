@@ -17,10 +17,15 @@ export default function ScannerPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Automatically start the camera when component mounts
-    startCamera();
+    // Add a small delay before starting camera on iOS to ensure DOM is ready
+    const startDelay = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 100 : 0;
+
+    const timer = setTimeout(() => {
+      startCamera();
+    }, startDelay);
 
     return () => {
+      clearTimeout(timer);
       stopCamera();
     };
   }, []);
@@ -72,15 +77,42 @@ export default function ScannerPage() {
     try {
       setError(null);
       setShowStartButton(false);
+      setCameraStarted(false);
 
       // Check if browser supports getUserMedia
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error('Camera not supported in this browser');
       }
 
-      // Try multiple constraint configurations for iOS compatibility
-      const constraintOptions = [
-        // First try with environment camera
+      // iOS-specific constraints with more conservative settings
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const constraintOptions = isIOS ? [
+        // iOS-optimized constraints
+        {
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 640, max: 1280 },
+            height: { ideal: 480, max: 720 },
+            frameRate: { ideal: 15, max: 30 }
+          }
+        },
+        {
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 480 },
+            height: { ideal: 360 }
+          }
+        },
+        {
+          video: {
+            facingMode: 'environment'
+          }
+        },
+        {
+          video: true
+        }
+      ] : [
+        // Standard constraints for other devices
         {
           video: {
             facingMode: { exact: 'environment' },
@@ -88,7 +120,6 @@ export default function ScannerPage() {
             height: { ideal: 480, max: 720 }
           }
         },
-        // Fallback to any camera
         {
           video: {
             facingMode: 'environment',
@@ -96,13 +127,11 @@ export default function ScannerPage() {
             height: { ideal: 480, max: 720 }
           }
         },
-        // Minimal constraints for iOS
         {
           video: {
             facingMode: 'environment'
           }
         },
-        // Last resort - any video
         {
           video: true
         }
@@ -115,6 +144,7 @@ export default function ScannerPage() {
       for (const constraints of constraintOptions) {
         try {
           stream = await navigator.mediaDevices.getUserMedia(constraints);
+          console.log('Camera stream obtained with constraints:', constraints);
           break; // Success, exit loop
         } catch (err) {
           lastError = err;
@@ -133,74 +163,106 @@ export default function ScannerPage() {
           existingStream.getTracks().forEach(track => track.stop());
         }
 
-        videoRef.current.srcObject = stream;
+        // Set up video element for iOS
+        const video = videoRef.current;
+        video.srcObject = stream;
 
-        // iOS-specific video setup
-        videoRef.current.setAttribute('playsinline', 'true');
-        videoRef.current.setAttribute('webkit-playsinline', 'true');
-        videoRef.current.setAttribute('autoplay', 'true');
-        videoRef.current.muted = true;
-        videoRef.current.controls = false;
+        // iOS-specific video setup - must be done before setting srcObject
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('autoplay', 'true');
+        video.muted = true;
+        video.controls = false;
+        video.disablePictureInPicture = true;
 
-        // Force play for iOS
+        // Add event listeners for stream monitoring
+        stream.getTracks().forEach(track => {
+          track.addEventListener('ended', () => {
+            console.log('Camera track ended');
+            setError('Camera stream ended unexpectedly');
+            setCameraStarted(false);
+          });
+        });
+
+        // Enhanced play function for iOS
         const playVideo = async () => {
           try {
-            if (videoRef.current) {
-              // Force video to be visible first
-              videoRef.current.style.display = 'block';
-              videoRef.current.style.visibility = 'visible';
-              videoRef.current.style.opacity = '1';
+            if (!video || !video.srcObject) return;
 
-              await videoRef.current.play();
-              setCameraStarted(true);
+            // Ensure video is visible
+            video.style.display = 'block';
+            video.style.visibility = 'visible';
+            video.style.opacity = '1';
 
-              // Log success for debugging
-              console.log('Video playing successfully, dimensions:', {
-                videoWidth: videoRef.current.videoWidth,
-                videoHeight: videoRef.current.videoHeight,
-                readyState: videoRef.current.readyState
-              });
-            }
+            // Force load metadata first
+            video.load();
+
+            // Wait for metadata to load
+            await new Promise((resolve, reject) => {
+              if (video.readyState >= 1) {
+                resolve(true);
+                return;
+              }
+
+              const onLoadedMetadata = () => {
+                video.removeEventListener('loadedmetadata', onLoadedMetadata);
+                video.removeEventListener('error', onError);
+                resolve(true);
+              };
+
+              const onError = (e: Event) => {
+                video.removeEventListener('loadedmetadata', onLoadedMetadata);
+                video.removeEventListener('error', onError);
+                reject(e);
+              };
+
+              video.addEventListener('loadedmetadata', onLoadedMetadata);
+              video.addEventListener('error', onError);
+            });
+
+            await video.play();
+            setCameraStarted(true);
+
+            console.log('Video playing successfully, dimensions:', {
+              videoWidth: video.videoWidth,
+              videoHeight: video.videoHeight,
+              readyState: video.readyState,
+              paused: video.paused,
+              muted: video.muted
+            });
+
           } catch (playError) {
             console.error('Error playing video:', playError);
-            // Try to play again after a short delay
-            setTimeout(async () => {
-              try {
-                if (videoRef.current) {
-                  await videoRef.current.play();
-                  setCameraStarted(true);
-                  console.log('Video playing successfully on retry');
+
+            // iOS-specific retry logic
+            if (isIOS) {
+              setTimeout(async () => {
+                try {
+                  if (video && video.srcObject) {
+                    await video.play();
+                    setCameraStarted(true);
+                    console.log('Video playing successfully on iOS retry');
+                  }
+                } catch (retryError) {
+                  console.error('iOS retry play failed:', retryError);
+                  setError('Nu se poate porni camera pentru scanarea voucherelor. Apasă butonul pentru a încerca din nou.');
+                  setShowStartButton(true);
                 }
-              } catch (retryError) {
-                console.error('Retry play failed:', retryError);
-                setError('Nu se poate porni camera pentru scanarea voucherelor. Încercați să reîncărcați pagina.');
-              }
-            }, 500);
+              }, 1000);
+            } else {
+              setError('Nu se poate porni camera pentru scanarea voucherelor. Încercați să reîncărcați pagina.');
+              setShowStartButton(true);
+            }
           }
         };
 
-        // Wait for video to load then play
-        if (videoRef.current.readyState >= 2) {
-          // Video is already loaded
-          playVideo();
-        } else {
-          videoRef.current.onloadedmetadata = () => {
-            console.log('Video metadata loaded');
-            playVideo();
-          };
-          videoRef.current.oncanplay = () => {
-            console.log('Video can play');
-            playVideo();
-          };
-          videoRef.current.onloadeddata = () => {
-            console.log('Video data loaded');
-            playVideo();
-          };
-        }
+        // Start playing video
+        playVideo();
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
       setShowStartButton(true);
+      setCameraStarted(false);
 
       // More specific error messages
       if (err instanceof Error) {
@@ -222,11 +284,34 @@ export default function ScannerPage() {
   };
 
   const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
-      videoRef.current.srcObject = null;
+    try {
+      if (videoRef.current) {
+        // Pause video first
+        videoRef.current.pause();
+
+        // Stop all tracks
+        if (videoRef.current.srcObject) {
+          const stream = videoRef.current.srcObject as MediaStream;
+          stream.getTracks().forEach(track => {
+            track.stop();
+            console.log('Camera track stopped:', track.kind);
+          });
+        }
+
+        // Clear video source
+        videoRef.current.srcObject = null;
+        videoRef.current.src = '';
+
+        // Remove event listeners
+        videoRef.current.onloadedmetadata = null;
+        videoRef.current.oncanplay = null;
+        videoRef.current.onloadeddata = null;
+        videoRef.current.onerror = null;
+      }
+    } catch (error) {
+      console.error('Error stopping camera:', error);
     }
+
     setCameraStarted(false);
   };
 

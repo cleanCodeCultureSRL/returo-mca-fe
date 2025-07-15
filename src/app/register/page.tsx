@@ -98,9 +98,24 @@ export default function RegisterPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/home');
+      // Check if we came from onboarding - if so, don't auto-redirect
+      const referrer = document.referrer;
+      const isFromOnboarding = referrer.includes('/onboarding_screen_') ||
+        window.location.search.includes('from=onboarding') ||
+        sessionStorage.getItem('skipAuthRedirect') === 'true';
+
+      if (!isFromOnboarding) {
+        router.push('/home');
+      }
     }
   }, [isAuthenticated, router]);
+
+  // Clear the skip redirect flag when component unmounts
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('skipAuthRedirect');
+    };
+  }, []);
 
   const handleLoginLink = () => {
     // Navigate to login page
