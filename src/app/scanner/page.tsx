@@ -394,10 +394,10 @@ export default function ScannerPage() {
 
         {/* Barcode Scanning Rectangle - only show when camera is started and no image captured */}
         {cameraStarted && !capturedImage && (
-          <div className="absolute inset-0 flex items-center justify-center z-30">
-            <div className="relative">
+          <div className="absolute inset-0 flex items-center justify-center z-30 px-4">
+            <div className="relative w-full">
               {/* Yellow Rectangle Border */}
-              <div className="w-100 h-48 border-4 border-yellow-400 rounded-lg relative">
+              <div className="w-full h-48 border-4 border-yellow-400 rounded-lg relative">
                 {/* Corner indicators */}
                 <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-yellow-400 rounded-tl-lg"></div>
                 <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-yellow-400 rounded-tr-lg"></div>
@@ -405,7 +405,7 @@ export default function ScannerPage() {
                 <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-yellow-400 rounded-br-lg"></div>
 
                 {/* Scanning line animation */}
-                <div className="absolute inset-0 overflow-hidden rounded-lg">w
+                <div className="absolute inset-0 overflow-hidden rounded-lg">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-400 animate-pulse"></div>
                 </div>
               </div>

@@ -15,8 +15,28 @@ export default function ChallengesPage() {
 
   const handleShareChallenge = () => {
     const message = "🌱 Tocmai am câștigat în Golden League pe Returo! Mă bucur să contribui la un mediu mai curat prin reciclare! 🏆 Alătură-te și tu provocării! #Returo #Reciclare #GoldenLeague #MediuCurat";
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}&quote=${encodeURIComponent(message)}`;
-    window.open(facebookUrl, '_blank', 'width=600,height=400');
+    const appUrl = window.location.origin;
+
+    // Try to open native Facebook app first
+    const facebookAppUrl = `fb://facewebmodal/f?href=${encodeURIComponent(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(appUrl)}&quote=${encodeURIComponent(message)}`)}`;
+
+    // Create a hidden iframe to test if the app opens
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = facebookAppUrl;
+    document.body.appendChild(iframe);
+
+    // Set a timeout to open web version if app doesn't open
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+
+      // Fallback to web version
+      const facebookWebUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(appUrl)}&quote=${encodeURIComponent(message)}`;
+      window.open(facebookWebUrl, '_blank', 'width=600,height=400');
+    }, 1000);
+
+    // Also try direct app URL scheme
+    window.location.href = facebookAppUrl;
   };
 
   // Leaderboard data
