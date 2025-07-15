@@ -30,6 +30,7 @@ export default function VoucherHistoryPage() {
   const [isBulkMode, setIsBulkMode] = useState(false);
   const [selectedVouchers, setSelectedVouchers] = useState<string[]>([]);
   const [isBulkTransferModalOpen, setIsBulkTransferModalOpen] = useState(false);
+  const [isBulkTransferSuccess, setIsBulkTransferSuccess] = useState(false);
 
   const handleBack = () => {
     router.back();
@@ -92,6 +93,7 @@ export default function VoucherHistoryPage() {
       amount: selectedVoucher?.amount
     });
     setIsTransferModalOpen(false);
+    setIsBulkTransferSuccess(false);
     setIsSuccessModalOpen(true);
   };
 
@@ -105,6 +107,7 @@ export default function VoucherHistoryPage() {
       totalAmount: calculateTotalAmount()
     });
     setIsBulkTransferModalOpen(false);
+    setIsBulkTransferSuccess(true);
     setIsSuccessModalOpen(true);
     setIsBulkMode(false);
     setSelectedVouchers([]);
@@ -113,6 +116,7 @@ export default function VoucherHistoryPage() {
   const handleCloseSuccessModal = () => {
     setIsSuccessModalOpen(false);
     setSelectedVoucher(null);
+    setIsBulkTransferSuccess(false);
     // Reset form fields
     setBeneficiaryName('');
     setBeneficiaryIban('');
@@ -430,7 +434,7 @@ export default function VoucherHistoryPage() {
             onClick={handleToggleBulkMode}
             className={`w-full text-black py-3 rounded-2xl text-base font-euclid-semibold touchable-opacity ${isBulkMode ? 'bg-yellow-400' : 'bg-white'}`}
           >
-            {isBulkMode ? 'Anulează' : 'Cash out'}
+            {isBulkMode ? 'Anulează' : 'Transferă către IBAN'}
           </button>
         </div>
       )}
@@ -486,9 +490,9 @@ export default function VoucherHistoryPage() {
         <div className="fixed bottom-32 left-4 right-4 z-40 px-8">
           <button
             onClick={handleBulkCashOut}
-            className="w-full bg-black text-white py-4 rounded-4xl text-lg font-bold hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
+            className="w-full bg-black text-white py-4 px-4 rounded-4xl text-lg font-bold hover:bg-gray-800 transition-colors shadow-lg touchable-opacity"
           >
-            Cash out {selectedVouchers.length} {selectedVouchers.length === 1 ? 'voucher' : 'vouchere'} în valoare de {formatAmount(calculateTotalAmount())}
+            Transferă către IBAN {selectedVouchers.length} {selectedVouchers.length === 1 ? 'voucher' : 'vouchere'} în valoare de {formatAmount(calculateTotalAmount())}
           </button>
         </div>
       )}
@@ -611,7 +615,7 @@ export default function VoucherHistoryPage() {
                   onClick={handleCashOut}
                   className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
                 >
-                  Cash out
+                  Transferă către IBAN
                 </button>
               )}
             </div>
@@ -686,7 +690,7 @@ export default function VoucherHistoryPage() {
                     height={16}
                     className="w-4 h-4"
                   />
-                  <span className="text-lg font-bold text-white">Cash out voucher</span>
+                  <span className="text-lg font-bold text-white">Transferă către IBAN</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Image
@@ -766,7 +770,7 @@ export default function VoucherHistoryPage() {
                 onClick={handleTransfer}
                 className="flex-1 bg-white text-black py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors touchable-opacity"
               >
-                Cash out
+                Transferă către IBAN
               </button>
             </div>
           </div>
@@ -788,7 +792,7 @@ export default function VoucherHistoryPage() {
                     height={16}
                     className="w-4 h-4"
                   />
-                  <span className="text-lg font-bold text-white">Cash out vouchere</span>
+                  <span className="text-lg font-bold text-white">Transferă către IBAN</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Image
@@ -868,7 +872,7 @@ export default function VoucherHistoryPage() {
                 onClick={handleBulkTransfer}
                 className="flex-1 bg-white text-black py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors touchable-opacity"
               >
-                Cash out
+                Transferă către IBAN
               </button>
             </div>
           </div>
@@ -876,7 +880,7 @@ export default function VoucherHistoryPage() {
       )}
 
       {/* Success Modal */}
-      {isSuccessModalOpen && selectedVoucher && (
+      {isSuccessModalOpen && (
         <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
           <div className="bg-black rounded-t-3xl w-full max-w-md p-8 pointer-events-auto text-center">
             <div className="mb-8">
@@ -888,7 +892,10 @@ export default function VoucherHistoryPage() {
                 className="mx-auto mb-6"
               />
               <p className="text-white text-lg font-euclid-regular leading-relaxed">
-                Cash out pentru {selectedVoucher.amount} a fost efectuat cu succes
+                {isBulkTransferSuccess
+                  ? `Transferul către IBAN pentru ${selectedVouchers.length} ${selectedVouchers.length === 1 ? 'voucher' : 'vouchere'} în valoare de ${formatAmount(calculateTotalAmount())} a fost efectuat cu succes`
+                  : `Transferul către IBAN pentru ${selectedVoucher?.amount || '0 RON'} a fost efectuat cu succes`
+                }
               </p>
             </div>
 

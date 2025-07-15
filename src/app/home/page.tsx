@@ -355,7 +355,7 @@ export default function HomePage() {
                   onClick={handleCashOut}
                   className="flex-1 bg-black text-white py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-colors touchable-opacity"
                 >
-                  Cash out
+                  Transferă către IBAN
                 </button>
               )}
             </div>
@@ -458,7 +458,7 @@ export default function HomePage() {
                 onClick={handleTransfer}
                 className="flex-1 bg-white text-black py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors touchable-opacity"
               >
-                Cash out
+                Transferă către IBAN
               </button>
             </div>
           </div>
@@ -478,7 +478,7 @@ export default function HomePage() {
                 className="mx-auto mb-6"
               />
               <p className="text-white text-lg font-euclid-regular leading-relaxed">
-                Cash out pentru {selectedReceipt.amount} a fost efectuat cu succes
+                Transferul către IBAN pentru {selectedReceipt.amount} a fost efectuat cu succes
               </p>
             </div>
 
