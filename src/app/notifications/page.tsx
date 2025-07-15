@@ -21,6 +21,36 @@ export default function NotificationsPage() {
       iconBg: 'bg-green-500'
     },
     {
+      icon: '/icons/open_camera_icon.png',
+      title: 'Frigiderul te dă de gol!',
+      description: 'Sticlele goale vor la plimbare. Du‑le la RVM și întoarce‑te cu puncte fresh 💸',
+      iconBg: 'bg-blue-500'
+    },
+    {
+      icon: '/icons/portofel_icon.png',
+      title: 'Sacoșa imploră: „Eliberează‑mă!"',
+      description: '10 PET‑uri captive? Scoate‑le la aer și câștigă bonus Bulk +5 🌪️',
+      iconBg: 'bg-orange-500'
+    },
+    {
+      icon: '/icons/provocari_icon.png',
+      title: 'Luni fără plastic? Challenge accepted!',
+      description: 'Scanează primul recipient azi și pornești streak‑ul de 7 zile 🔥',
+      iconBg: 'bg-red-500'
+    },
+    {
+      icon: '/icons/receipt_icon.png',
+      title: 'PETflix & chill s‑a terminat',
+      description: 'Maratonul de weekend a lăsat urme. Transformă recipientele reciclabile în EcoPoints 🚀',
+      iconBg: 'bg-purple-500'
+    },
+    {
+      icon: '/icons/wallet_yellow_icon.png',
+      title: 'Nu lăsa punctele să bată din aripi',
+      description: '1500 EcoPoints = Gold. Îți lipsesc doar 120… țâșnești până la RVM? 🏅',
+      iconBg: 'bg-yellow-400'
+    },
+    {
       icon: '/icons/big_star_icon.png',
       title: 'Felicitari!',
       description: 'Ai ieșit pe <strong>locul 2</strong> în provocarea săptămânii trecute! Ești pe drumul cel bun către recompense și mai mari.',
@@ -104,7 +134,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-4 pb-24 pt-30">
+      <div className="flex-1 overflow-y-auto px-4 pb-24 pt-26">
         <div className="space-y-4">
           {notifications.map((notification, index) => (
             <div key={index} className="rounded-4xl p-6 relative overflow-hidden" style={{ backgroundColor: '#B8E6C1' }}>

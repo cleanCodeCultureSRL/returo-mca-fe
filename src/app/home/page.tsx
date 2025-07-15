@@ -128,7 +128,7 @@ export default function HomePage() {
       <div
         className="px-4 pb-24 space-y-6 overflow-y-auto h-full"
         style={{
-          paddingTop: '120px',
+          paddingTop: '110px',
           height: '100vh',
           overflowY: 'auto',
           overflowX: 'hidden'
