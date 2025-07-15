@@ -7,6 +7,7 @@ import ThemeColor from '../components/ThemeColor';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginUser, clearError } from '../../store/slices/authSlice';
 import ErrorModal from '../components/ErrorModal';
+import DemoDisclaimer from '../components/DemoDisclaimer';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const { isLoading, error, isAuthenticated } = useAppSelector(state => state.auth);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showDemoDisclaimer, setShowDemoDisclaimer] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -65,14 +67,25 @@ export default function LoginPage() {
     router.push('/register');
   };
 
-  const handleSocialLogin = (provider: string) => {
-    // Handle social login
-    console.log(`${provider} login clicked`);
+  const handleSocialLogin = () => {
+    // Show demo disclaimer instead of actual login
+    setShowDemoDisclaimer(true);
+    // Auto-hide after 2 seconds
+    setTimeout(() => {
+      setShowDemoDisclaimer(false);
+    }, 2000);
   };
 
   return (
     <div className="fixed inset-0 bg-gray-50 flex flex-col">
       <ThemeColor color="#D2ECDE" />
+
+      {/* Demo Disclaimer Toast */}
+      <DemoDisclaimer
+        show={showDemoDisclaimer}
+        onHide={() => setShowDemoDisclaimer(false)}
+      />
+
       {/* Header Illustration */}
       <div className="bg-primary-light-green h-70 relative overflow-hidden z-10 w-screen left-1/2 transform -translate-x-1/2">
         <Image
@@ -152,11 +165,11 @@ export default function LoginPage() {
 
           {/* Social Login */}
           <div className="text-center mb-6 max-h-[667px]:mb-4">
-            <p className="text-black font-medium mb-4 font-euclid-semibold max-h-[667px]:mb-2">sau înregistrează-te cu</p>
-            <div className="flex justify-center space-x-4">
+            <p className="text-black font-medium mb-4 font-euclid-semibold">sau autentifică-te cu</p>
+            <div className="flex justify-center space-x-4 pb-10">
               {/* Google */}
               <button
-                onClick={() => handleSocialLogin('google')}
+                onClick={() => handleSocialLogin()}
                 className="w-16 h-16 rounded-3xl flex items-center justify-center hover:bg-yellow-500 transition-colors shadow-lg touchable-opacity max-h-[667px]:w-12 max-h-[667px]:h-12"
               >
                 <svg viewBox="0 0 24 24" className="w-8 h-8 max-h-[667px]:w-6 max-h-[667px]:h-6">
@@ -169,7 +182,7 @@ export default function LoginPage() {
 
               {/* Apple */}
               <button
-                onClick={() => handleSocialLogin('apple')}
+                onClick={() => handleSocialLogin()}
                 className="w-16 h-16 bg-black rounded-3xl flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg touchable-opacity max-h-[667px]:w-12 max-h-[667px]:h-12"
               >
                 <svg viewBox="0 0 24 24" className="w-8 h-8 max-h-[667px]:w-6 max-h-[667px]:h-6">

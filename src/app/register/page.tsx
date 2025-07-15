@@ -14,12 +14,10 @@ export default function RegisterPage() {
   const { isLoading, error, isAuthenticated } = useAppSelector(state => state.auth);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
-    confirmPassword: '',
   });
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
@@ -42,12 +40,6 @@ export default function RegisterPage() {
       errors.password = 'Parola este obligatorie';
     } else if (formData.password.length < 6) {
       errors.password = 'Parola trebuie să aibă minim 6 caractere';
-    }
-
-    if (!formData.confirmPassword) {
-      errors.confirmPassword = 'Confirmarea parolei este obligatorie';
-    } else if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Parolele nu se potrivesc';
     }
 
     setValidationErrors(errors);
@@ -145,7 +137,7 @@ export default function RegisterPage() {
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              placeholder="Prenume Nume"
+              placeholder="Nume întreg"
               className="w-full px-4 py-3 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
               required
             />
@@ -208,42 +200,7 @@ export default function RegisterPage() {
             )}
           </div>
 
-          {/* Confirm Password Field */}
-          <div className="mb-6">
-            <label className="block text-black font-medium mb-2 font-euclid-regular">Confirmă parola</label>
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                placeholder="Confirmă parola"
-                className="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-black bg-gray-100 placeholder-gray-400 text-black font-euclid-regular focus:outline-none focus:ring-2 focus:ring-primary-green"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors touchable-opacity"
-              >
-                {showConfirmPassword ? (
-                  // Eye open icon
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                ) : (
-                  // Eye closed icon
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                  </svg>
-                )}
-              </button>
-            </div>
-            {validationErrors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">{validationErrors.confirmPassword}</p>
-            )}
-          </div>
+
 
           {/* Terms and Conditions */}
           <div className="text-center mb-8">
@@ -273,7 +230,7 @@ export default function RegisterPage() {
         </div>
         <button
           onClick={handleRegister}
-          disabled={isLoading}
+          disabled={isLoading || !formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()}
           className="w-full bg-black text-white py-4 rounded-3xl border-4 border-black font-bold text-lg hover:bg-gray-800 transition-colors font-euclid-bold touchable-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Se încarcă...' : 'Înregistrează-te'}

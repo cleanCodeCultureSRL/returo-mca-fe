@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { yellow } from '../styles/colors';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logoutUser } from '../../store/slices/authSlice';
+import DemoDisclaimer from './DemoDisclaimer';
 
 interface HeaderProps {
   showTitle?: boolean;
@@ -14,6 +15,7 @@ interface HeaderProps {
 
 export default function Header({ showTitle, title }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showDemoDisclaimer, setShowDemoDisclaimer] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -50,6 +52,12 @@ export default function Header({ showTitle, title }: HeaderProps) {
         break;
       case 'Invita prieteni':
         router.push('/invite-a-friend');
+        break;
+      case 'Profil':
+      case 'Setari':
+      case 'Ajutor':
+        setShowDemoDisclaimer(true);
+        setIsMenuOpen(false);
         break;
       case 'Logout':
         handleLogout();
@@ -124,6 +132,12 @@ export default function Header({ showTitle, title }: HeaderProps) {
           </button>
         </div>
       </div>
+
+      {/* Demo Disclaimer */}
+      <DemoDisclaimer
+        show={showDemoDisclaimer}
+        onHide={() => setShowDemoDisclaimer(false)}
+      />
 
       {/* Invisible overlay to close menu when clicking outside */}
       {isMenuOpen && (
