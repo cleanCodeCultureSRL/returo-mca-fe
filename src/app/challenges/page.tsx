@@ -17,26 +17,34 @@ export default function ChallengesPage() {
     const message = "🌱 Tocmai am câștigat în Golden League pe Returo! Mă bucur să contribui la un mediu mai curat prin reciclare! 🏆 Alătură-te și tu provocării! #Returo #Reciclare #GoldenLeague #MediuCurat";
     const appUrl = window.location.origin;
 
-    // Try to open native Facebook app first
-    const facebookAppUrl = `fb://facewebmodal/f?href=${encodeURIComponent(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(appUrl)}&quote=${encodeURIComponent(message)}`)}`;
+    // Check if we can use the Web Share API (native sharing on mobile)
+    if (navigator.share) {
+      navigator.share({
+        title: 'RetuRO - Golden League',
+        text: message,
+        url: appUrl
+      }).catch(err => {
+        console.log('Error sharing:', err);
+        // Fallback to Facebook web share
+        openFacebookWebShare(message, appUrl);
+      });
+    } else {
+      // Fallback to Facebook web share
+      openFacebookWebShare(message, appUrl);
+    }
+  };
 
-    // Create a hidden iframe to test if the app opens
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = facebookAppUrl;
-    document.body.appendChild(iframe);
+  const openFacebookWebShare = (message: string, appUrl: string) => {
+    // Use Facebook's web sharer which works reliably across platforms
+    const facebookWebUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(appUrl)}&quote=${encodeURIComponent(message)}`;
 
-    // Set a timeout to open web version if app doesn't open
-    setTimeout(() => {
-      document.body.removeChild(iframe);
+    // Try to open in a new window/tab
+    const shareWindow = window.open(facebookWebUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
 
-      // Fallback to web version
-      const facebookWebUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(appUrl)}&quote=${encodeURIComponent(message)}`;
-      window.open(facebookWebUrl, '_blank', 'width=600,height=400');
-    }, 1000);
-
-    // Also try direct app URL scheme
-    window.location.href = facebookAppUrl;
+    // If popup is blocked, navigate to the URL
+    if (!shareWindow) {
+      window.location.href = facebookWebUrl;
+    }
   };
 
   // Leaderboard data

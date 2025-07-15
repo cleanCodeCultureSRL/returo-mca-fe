@@ -70,21 +70,21 @@ export default function RootLayout({
         <meta name="apple-touch-fullscreen" content="yes" />
 
         {/* Apple Touch Icons - Critical for iOS PWA */}
-        <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png" />
-        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png?v=2" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png?v=2" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png?v=2" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=2" />
 
         {/* Icons */}
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
-        <link rel="shortcut icon" href="/icons/icon-72x72.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-48x48.png?v=2" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-48x48.png?v=2" />
+        <link rel="shortcut icon" href="/icons/icon-192x192.png?v=2" />
 
         {/* Apple Splash Screens */}
-        <link rel="apple-touch-startup-image" href="/icons/icon-512x512.png" />
+        <link rel="apple-touch-startup-image" href="/icons/icon-512x512.png?v=2" />
 
         {/* Manifest */}
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.json?v=2" />
       </head>
       <body className={`${inter.className} bg-gray-50`} style={{ height: '100dvh', overflow: 'hidden', overscrollBehavior: 'none' }}>
         <ReduxProvider>
