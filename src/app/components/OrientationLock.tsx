@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Extend the ScreenOrientation interface to include the lock method
@@ -9,16 +9,51 @@ interface ScreenOrientationWithLock extends ScreenOrientation {
 }
 
 export default function OrientationLock() {
+  const [isLandscape, setIsLandscape] = useState(false);
+
   useEffect(() => {
-    // Function to check orientation (for potential future use)
+    // Function to check orientation using multiple methods
     const checkOrientation = () => {
-      const orientation = window.orientation;
-      const isCurrentlyLandscape =
-        orientation === 90 ||
-        orientation === -90 ||
-        window.innerWidth > window.innerHeight;
-      // CSS media queries handle the display logic
-      console.log('Orientation changed:', isCurrentlyLandscape ? 'landscape' : 'portrait');
+      // Method 1: Screen orientation API
+      let orientationFromAPI = false;
+      if (screen.orientation) {
+        const angle = screen.orientation.angle;
+        orientationFromAPI = angle === 90 || angle === -90;
+      }
+
+      // Method 2: Window orientation (legacy)
+      let orientationFromWindow = false;
+      if (typeof window.orientation !== 'undefined') {
+        orientationFromWindow = window.orientation === 90 || window.orientation === -90;
+      }
+
+      // Method 3: Viewport dimensions
+      let orientationFromDimensions = false;
+      const { innerWidth, innerHeight } = window;
+      orientationFromDimensions = innerWidth > innerHeight;
+
+      // Method 4: Media query check
+      let orientationFromMediaQuery = false;
+      if (window.matchMedia) {
+        orientationFromMediaQuery = window.matchMedia('(orientation: landscape)').matches;
+      }
+
+      // Use the most reliable method available
+      const detectedLandscape = orientationFromAPI || orientationFromWindow || orientationFromDimensions || orientationFromMediaQuery;
+
+      console.log('Orientation Detection:', {
+        api: orientationFromAPI,
+        window: orientationFromWindow,
+        dimensions: orientationFromDimensions,
+        mediaQuery: orientationFromMediaQuery,
+        final: detectedLandscape,
+        screenAngle: screen.orientation?.angle,
+        windowOrientation: window.orientation,
+        dimensions: `${innerWidth}x${innerHeight}`
+      });
+
+      setIsLandscape(detectedLandscape);
+      return detectedLandscape;
     };
 
     // Lock orientation using Screen Orientation API
@@ -41,16 +76,27 @@ export default function OrientationLock() {
 
     // Handle orientation change events
     const handleOrientationChange = () => {
-      checkOrientation();
-      // Attempt to lock orientation again if it changes
+      // Use setTimeout to ensure the orientation change is complete
       setTimeout(() => {
+        checkOrientation();
+        // Attempt to lock orientation again if it changes
         lockOrientation();
-      }, 500);
+      }, 100);
     };
 
     // Handle window resize (fallback for orientation detection)
     const handleResize = () => {
-      checkOrientation();
+      setTimeout(() => {
+        checkOrientation();
+      }, 100);
+    };
+
+    // Media query listener for landscape detection
+    const landscapeMediaQuery = window.matchMedia('(orientation: landscape)');
+    const handleMediaQueryChange = () => {
+      setTimeout(() => {
+        checkOrientation();
+      }, 100);
     };
 
     // Listen for orientation changes
@@ -62,6 +108,14 @@ export default function OrientationLock() {
     window.addEventListener('orientationchange', handleOrientationChange);
     window.addEventListener('resize', handleResize);
 
+    // Media query listener
+    if (landscapeMediaQuery.addEventListener) {
+      landscapeMediaQuery.addEventListener('change', handleMediaQueryChange);
+    } else {
+      // Fallback for older browsers
+      landscapeMediaQuery.addListener(handleMediaQueryChange);
+    }
+
     // Cleanup event listeners
     return () => {
       if (screen.orientation) {
@@ -69,55 +123,62 @@ export default function OrientationLock() {
       }
       window.removeEventListener('orientationchange', handleOrientationChange);
       window.removeEventListener('resize', handleResize);
+
+      if (landscapeMediaQuery.removeEventListener) {
+        landscapeMediaQuery.removeEventListener('change', handleMediaQueryChange);
+      } else {
+        // Fallback for older browsers
+        landscapeMediaQuery.removeListener(handleMediaQueryChange);
+      }
     };
   }, []);
 
+  // Don't render anything if in portrait mode
+  if (!isLandscape) return null;
+
   return (
-    <>
-      {/* Landscape Warning Overlay */}
-      <div className="landscape-warning">
-        <div className="flex flex-col items-center justify-center space-y-6">
-          {/* Rotate Phone Icon */}
-          <div className="relative">
-            <div className="w-24 h-24 border-4 border-white rounded-2xl flex items-center justify-center">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                <line x1="8" y1="21" x2="16" y2="21" />
-                <line x1="12" y1="17" x2="12" y2="21" />
-              </svg>
-            </div>
-            {/* Rotation Arrow */}
-            <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2">
-                <path d="M21 2v6h-6" />
-                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
-              </svg>
-            </div>
+    <div className="fixed inset-0 bg-black text-white z-[9999] flex flex-col items-center justify-center text-center p-8">
+      <div className="flex flex-col items-center justify-center space-y-6">
+        {/* Rotate Phone Icon */}
+        <div className="relative">
+          <div className="w-24 h-24 border-4 border-white rounded-2xl flex items-center justify-center">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
           </div>
-
-          {/* Warning Message */}
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-white font-euclid-semibold">
-              Rotește dispozitivul
-            </h2>
-            <p className="text-lg text-gray-300 max-w-sm font-euclid-regular">
-              Această aplicație funcționează doar în modul portret.
-              Te rugăm să rotești dispozitivul pentru a continua.
-            </p>
-          </div>
-
-          {/* App Logo */}
-          <div className="mt-8">
-            <Image
-              src="/returo_logo.png"
-              alt="RetuRO Logo"
-              width={120}
-              height={40}
-              className="opacity-70"
-            />
+          {/* Rotation Arrow */}
+          <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2">
+              <path d="M21 2v6h-6" />
+              <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+            </svg>
           </div>
         </div>
+
+        {/* Warning Message */}
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold text-white font-euclid-semibold">
+            Rotește dispozitivul
+          </h2>
+          <p className="text-lg text-gray-300 max-w-sm font-euclid-regular">
+            Această aplicație funcționează doar în modul portret.
+            Te rugăm să rotești dispozitivul pentru a continua.
+          </p>
+        </div>
+
+        {/* App Logo */}
+        <div className="mt-8">
+          <Image
+            src="/returo_logo.png"
+            alt="RetuRO Logo"
+            width={120}
+            height={40}
+            className="opacity-70"
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 } 
