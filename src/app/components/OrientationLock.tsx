@@ -49,7 +49,7 @@ export default function OrientationLock() {
         final: detectedLandscape,
         screenAngle: screen.orientation?.angle,
         windowOrientation: window.orientation,
-        dimensions: `${innerWidth}x${innerHeight}`
+        viewport: `${innerWidth}x${innerHeight}`
       });
 
       setIsLandscape(detectedLandscape);
@@ -169,7 +169,7 @@ export default function OrientationLock() {
         </div>
 
         {/* App Logo */}
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <Image
             src="/returo_logo.png"
             alt="RetuRO Logo"
@@ -177,7 +177,7 @@ export default function OrientationLock() {
             height={40}
             className="opacity-70"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
