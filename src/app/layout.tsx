@@ -4,6 +4,7 @@ import "./globals.css";
 import ReduxProvider from "../store/ReduxProvider";
 import AuthStatus from "./components/AuthStatus";
 import OrientationLock from "./components/OrientationLock";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -93,6 +94,7 @@ export default function RootLayout({
           <div className="max-w-md mx-auto bg-white pwa-container portrait-only">
             {children}
           </div>
+          <Analytics />
         </ReduxProvider>
       </body>
     </html>
